@@ -3,12 +3,21 @@
 import sys
 
 odf_dir = "."
+template = "template.ods"
 
 #
 # functions
 #
 
+def getdate():
+    return False
+
+def copy(src, dst):
+    return False
+
 def create_new_odf():
+    date = getdate()
+    copy(template, date + ".ods")
     return False
 
 def read_odf(file):
