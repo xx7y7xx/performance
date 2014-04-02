@@ -17,7 +17,7 @@ def copy(src, dst):
 
 def create_new_odf():
     date = getdate()
-    copy(template, date + ".ods")
+    copy(template, str(date) + ".ods")
     return False
 
 def read_odf(file):
