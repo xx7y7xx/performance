@@ -1,5 +1,7 @@
 #!/bin/python2.7
 
+import sys
+
 odf_dir = "."
 
 #
@@ -9,7 +11,7 @@ odf_dir = "."
 def create_new_odf():
     return False
 
-def read_odf():
+def read_odf(file):
     return False
 
 def insert_row(odf, data):
@@ -27,7 +29,7 @@ def main(argv):
     big_table = create_new_odf()
 
     for odf in odf_dir:
-        data = read(odf)
+        data = read_odf(odf)
         insert_row(big_table, data)
 
     sort(big_table)
