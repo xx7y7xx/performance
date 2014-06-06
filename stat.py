@@ -5,6 +5,10 @@ import os
 from odf.opendocument import load
 from odf import text
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 TS = 0.0
 XS = 0.0#xxdebug
 DEBUG = 0
@@ -159,6 +163,19 @@ def all_odt(table, create) :
 def header(table) :
     global DEBUG
 
+    # title
+
+    tr = TableRow()
+    table.addElement(tr)
+
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "2014年 05 月 研发中心 绩效评估表")
+
+    # table header
+
     tr = TableRow()
     table.addElement(tr)
     
@@ -183,15 +200,46 @@ def header(table) :
     cell(tr, "note")
     
 def footer(table) :
+
+    # footer row 1
+
     tr = TableRow()
     table.addElement(tr)
     
-    cell(tr, "zhuguan")
+    cell(tr, "部门主管\n签字")
+    cell(tr, "")
+    cell(tr, "")
     cell(tr, "")
     
-    cell(tr, "zongjingli")
+    cell(tr, "总经理")
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "")
+
+    cell(tr, "不参加考核")
+    cell(tr, "")
+    cell(tr, "")
     cell(tr, "")
     
+    # footer row 2
+
+    tr = TableRow()
+    table.addElement(tr)
+
+    cell(tr, "人力资源\n审核")
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "")
+
+    cell(tr, "签字")
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "")
+
+    cell(tr, "人员备注")
+    cell(tr, "")
+    cell(tr, "")
+    cell(tr, "")
 
 # main
 
