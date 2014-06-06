@@ -179,7 +179,8 @@ def header(table) :
         cell(tr, "money")
         cell(tr, "money score")
     cell(tr, "score")
-    cell(tr, "ranking")
+
+    cell(tr, "note")
     
 def footer(table) :
     tr = TableRow()
