@@ -12,6 +12,7 @@ DEBUG = 0
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
 from cfg import QIAN
 from cfg import REVIEW
+from cfg import TM
 
 def valuetype(val):
     valuetype="string"
@@ -78,6 +79,10 @@ def single_odt(path, uname, create) :
     global XS
     global DEBUG
     global REVIEW
+    global TM
+
+    is_3m = TM[uname]
+    money = QIAN[uname]
 
     print "[single_odt] path="+path
     doc = load(path)
@@ -106,7 +111,10 @@ def single_odt(path, uname, create) :
         
         if create == 1 :
             #table
-            cell(tr, int(num))
+            if idx == 6 :
+                cell(tr, int(num)*is_3m)
+            else :
+                cell(tr, int(num))
         
         # store contrib
         contrib.append(int(num))
@@ -123,24 +131,24 @@ def single_odt(path, uname, create) :
     xuqiu = contrib[6]
     zuyuan = contrib[7]
     
-    all_as_code = float(daima + xuqiu*10 + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
+    all_as_code = float(daima + xuqiu*10*is_3m + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
         TS += all_as_code
     
     if create == 1 :
-        print "QIAN[uname]="+str(QIAN[uname])
+        print "money="+str(money)
         print "XS="+str(XS)
         print "TS="+str(TS)
 
-        score = (all_as_code / TS) / (QIAN[uname] / XS)
+        score = (all_as_code / TS) / (money / XS)
 
         cell(tr, all_as_code)               # all as score
         cell(tr, (all_as_code / TS))        # code score
         if DEBUG != 0 :
-            cell(tr, QIAN[uname])           # money
-            cell(tr, (QIAN[uname] / XS))    # money score
+            cell(tr, money)                 # money
+            cell(tr, (money / XS))          # money score
         cell(tr, score)
     
 def all_odt(table, create) :
