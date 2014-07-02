@@ -11,12 +11,11 @@ sys.setdefaultencoding('utf8')
 
 TS = 0.0
 XS = 0.0#xxdebug
-DEBUG = 0
+DEBUG = 1
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
-from cfg import QIAN
 from cfg import REVIEW
-from cfg import TM
+from cfg import UDATA
 
 TITLE = "2014年 06 月 研发中心 绩效评估表"
 REVIEW = REVIEW + "/2014-06"
@@ -67,12 +66,12 @@ def get_num(para) :
         return num
 
 def get_total_money() :
-    global QIAN
     global XS
-    for n,m in QIAN.items() :
-        print "[get_total_money] n='"+n+"'"
-        print "[get_total_money] m='"+str(m)+"'"
-        XS += m
+    global UDATA
+    for n,d in UDATA.items() :
+        print "[get_total_money] name : '"+n+"'"
+        print "[get_total_money] money : '"+str(d['qian'])+"'"
+        XS += d['qian']
 
 def cell(tr, val) :
     print "[cell] type="+str(type(val))
@@ -86,10 +85,10 @@ def single_odt(path, uname, create) :
     global XS
     global DEBUG
     global REVIEW
-    global TM
+    global UDATA
 
-    is_3m = TM[uname]
-    money = QIAN[uname]
+    is_3m = UDATA[uname]['3m']
+    money = UDATA[uname]['qian']
 
     print "[single_odt] path="+path
     doc = load(path)
