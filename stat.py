@@ -11,7 +11,7 @@ sys.setdefaultencoding('utf8')
 
 TS = 0.0
 XS = 0.0#xxdebug
-DEBUG = 1
+DEBUG = 0
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
 from cfg import REVIEW
@@ -73,9 +73,12 @@ def get_total_money() :
         print "[get_total_money] money : '"+str(d['qian'])+"'"
         XS += d['qian']
 
-def cell(tr, val) :
+def cell(tr, val, style = None) :
     print "[cell] type="+str(type(val))
-    tc = TableCell(valuetype=valuetype(val), value=str(val))
+    if style is None :
+        tc = TableCell(valuetype=valuetype(val), value=str(val))
+    else :
+        tc = TableCell(stylename=style, valuetype=valuetype(val), value=str(val))
     tr.addElement(tc)
     p = P(stylename=tablecontents,text=str(val))
     tc.addElement(p)
@@ -168,91 +171,95 @@ def header(table) :
 
     # title
 
-    tr = TableRow()
+    tr = TableRow(stylename=heighthigh)
     table.addElement(tr)
 
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
-    cell(tr, TITLE)
+    cell(tr, TITLE, bigtitle)
 
     # table header
 
     tr = TableRow()
     table.addElement(tr)
     
-    cell(tr, "name")
+    cell(tr, "name", tableheader)
     
-    cell(tr, "self ticket")
-    cell(tr, "other ticket")
-    cell(tr, "wiki")
-    cell(tr, "wiki code")
-    cell(tr, "code")
-    cell(tr, "bug ticket")
-    cell(tr, "3m")
-    cell(tr, "team member")
+    cell(tr, "self ticket", tableheader)
+    cell(tr, "other ticket", tableheader)
+    cell(tr, "wiki", tableheader)
+    cell(tr, "wiki code", tableheader)
+    cell(tr, "code", tableheader)
+    cell(tr, "bug ticket", tableheader)
+    cell(tr, "3m", tableheader)
+    cell(tr, "team member", tableheader)
     
-    cell(tr, "all as code")
-    cell(tr, "code score")
+    cell(tr, "all as code", tableheader)
+    cell(tr, "code score", tableheader)
     if DEBUG != 0 :
-        cell(tr, "money")
-        cell(tr, "money score")
-    cell(tr, "score")
+        cell(tr, "money", tableheader)
+        cell(tr, "money score", tableheader)
+    cell(tr, "score", tableheader)
 
-    cell(tr, "note")
+    cell(tr, "note", tableheader)
     
 def footer(table) :
 
     # footer row 1
 
-    tr = TableRow()
+    tr = TableRow(stylename=heighthigh)
     table.addElement(tr)
     
-    cell(tr, "部门主管\n签字")
+    cell(tr, "部门主管\n签字", tablefooter)
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
     
-    cell(tr, "总经理")
+    cell(tr, "总经理", tablefooter)
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
 
-    cell(tr, "不参加考核")
+    cell(tr, "不参加考核", tablefooter)
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
     
     # footer row 2
 
-    tr = TableRow()
+    tr = TableRow(stylename=heighthigh)
     table.addElement(tr)
 
-    cell(tr, "人力资源\n审核")
+    cell(tr, "人力资源\n审核", tablefooter)
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
 
-    cell(tr, "签字")
+    cell(tr, "签字", tablefooter)
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
 
-    cell(tr, "人员备注")
+    cell(tr, "人员备注", tablefooter)
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
 
+#
 # main
+#
 
 from odf.opendocument import OpenDocumentSpreadsheet
 from odf.style import Style, TextProperties, ParagraphProperties
 from odf.style import TableColumnProperties
+from odf.style import TableRowProperties
 from odf.text import P
 from odf.table import Table, TableColumn, TableRow, TableCell
 
 doc = OpenDocumentSpreadsheet()
+
 # Create a style for the table content. One we can modify
 # later in the word processor.
 tablecontents = Style(name="Table Contents", family="paragraph")
@@ -262,18 +269,47 @@ doc.styles.addElement(tablecontents)
 # Create automatic styles for the column widths.
 # We want two different widths, one in inches, the other one in metric.
 # ODF Standard section 15.9.1
-widthshort = Style(name="Wshort", family="table-column")
-widthshort.addElement(TableColumnProperties(columnwidth="1.7cm"))
-doc.automaticstyles.addElement(widthshort)
-
 widthwide = Style(name="Wwide", family="table-column")
-widthwide.addElement(TableColumnProperties(columnwidth="1.5in"))
+widthwide.addElement(TableColumnProperties(columnwidth="1.0in"))
 doc.automaticstyles.addElement(widthwide)
+
+# high height row
+heighthigh = Style(name="Hhigh", family="table-row")
+heighthigh.addElement(TableRowProperties(rowheight="1.2cm"))
+doc.automaticstyles.addElement(heighthigh)
+
+# one big title
+bigtitle = Style(name="Large title", family="table-cell")
+bigtitle.addElement(
+    TextProperties(
+        fontfamily="WenQuanYi Micro Hei",
+        fontsize="15pt", fontsizeasian="15pt",
+        fontweight="bold", fontweightasian="bold"
+))
+doc.styles.addElement(bigtitle)
+
+# style for table header
+tableheader = Style(name="Table header", family="table-cell")
+tableheader.addElement(
+    TextProperties(
+        fontweight="bold", fontweightasian="bold"
+))
+doc.styles.addElement(tableheader)
+
+# style for table footer
+tablefooter = Style(name="Large text", family="table-cell")
+tablefooter.addElement(
+    TextProperties(
+        fontfamily="WenQuanYi Micro Hei",
+        fontsize="13pt", fontsizeasian="13pt",
+        fontweight="bold", fontweightasian="bold"
+))
+tablefooter.addElement(ParagraphProperties(textalign="center"))
+doc.styles.addElement(tablefooter)
 
 # Start the table, and describe the columns
 table = Table(name="jixiao")
-table.addElement(TableColumn(numbercolumnsrepeated=4,stylename=widthshort))
-table.addElement(TableColumn(numbercolumnsrepeated=3,stylename=widthwide))
+table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
 
 # glue start
 get_total_money()
