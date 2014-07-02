@@ -18,6 +18,9 @@ from cfg import QIAN
 from cfg import REVIEW
 from cfg import TM
 
+TITLE = "2014年 06 月 研发中心 绩效评估表"
+REVIEW = REVIEW + "/2014-06"
+
 def valuetype(val):
     valuetype="string"
     if isinstance(val,str): valuetype="string"
@@ -162,6 +165,7 @@ def all_odt(table, create) :
 
 def header(table) :
     global DEBUG
+    global TITLE
 
     # title
 
@@ -172,7 +176,7 @@ def header(table) :
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
-    cell(tr, "2014年 05 月 研发中心 绩效评估表")
+    cell(tr, TITLE)
 
     # table header
 
