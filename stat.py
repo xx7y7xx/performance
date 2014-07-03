@@ -189,25 +189,25 @@ def header(table) :
     tr = TableRow()
     table.addElement(tr)
     
-    cell(tr, "name", tableheader)
+    cell(tr, "姓名", tableheader)
     
-    cell(tr, "self ticket", tableheader)
-    cell(tr, "other ticket", tableheader)
-    cell(tr, "wiki", tableheader)
-    cell(tr, "wiki code", tableheader)
-    cell(tr, "code", tableheader)
-    cell(tr, "bug ticket", tableheader)
-    cell(tr, "3m", tableheader)
-    cell(tr, "team member", tableheader)
+    cell(tr, "自行发贴", tableheader)
+    cell(tr, "热心回复", tableheader)
+    cell(tr, "wiki文档", tableheader)
+    cell(tr, "wiki代码", tableheader)
+    cell(tr, "有效代码", tableheader)
+    cell(tr, "bug贴", tableheader)
+    cell(tr, "3月加成", tableheader)
+    cell(tr, "组员贡献", tableheader)
     
-    cell(tr, "all as code", tableheader)
-    cell(tr, "code score", tableheader)
+    cell(tr, "绝对贡献", tableheader)
+    cell(tr, "贡献占比", tableheader)
     if DEBUG != 0 :
         cell(tr, "money", tableheader)
         cell(tr, "money score", tableheader)
-    cell(tr, "score", tableheader)
+    cell(tr, "绩效系数", tableheader)
 
-    cell(tr, "note", tableheader)
+    cell(tr, "备注", tableheader)
     
 def footer(table) :
 
