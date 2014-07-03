@@ -90,6 +90,10 @@ def single_odt(path, uname, create) :
     global REVIEW
     global UDATA
 
+    # exclude users who is not RD
+    if uname not in UDATA :
+        return False
+
     is_3m = UDATA[uname]['3m']
     money = UDATA[uname]['qian']
 
