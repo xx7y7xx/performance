@@ -17,8 +17,8 @@ DEBUG = 0
 from cfg import REVIEW
 from cfg import UDATA
 
-TITLE = "2014年 06 月 研发中心 绩效评估表"
-REVIEW = REVIEW + "/2014-06"
+TITLE = "2014年 07 月 研发中心 绩效评估表"
+REVIEW = REVIEW + "/2014-07"
 
 def valuetype(val):
     valuetype="string"
@@ -69,8 +69,9 @@ def get_total_money() :
     global XS
     global UDATA
     for n,d in UDATA.items() :
-        print "[get_total_money] name : '"+n+"'"
-        print "[get_total_money] money : '"+str(d['qian'])+"'"
+        if DEBUG is 1 : 
+            print "[get_total_money] name : '"+n+"'"
+            print "[get_total_money] money : '"+str(d['qian'])+"'"
         XS += d['qian']
 
 def cell(tr, val, style = None) :
@@ -151,8 +152,9 @@ def single_odt(path, uname, create) :
         TS += all_as_code
     
     if create == 1 :
-        print "money="+str(money)
-        print "XS="+str(XS)
+        if DEBUG is 1 :
+            print "money="+str(money)
+            print "XS(total money)="+str(XS)
         print "TS="+str(TS)
 
         score = (all_as_code / TS) / (money / XS)
