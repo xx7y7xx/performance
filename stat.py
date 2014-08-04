@@ -19,6 +19,7 @@ from cfg import UDATA
 
 TITLE = "2014年 07 月 研发中心 绩效评估表"
 REVIEW = REVIEW + "/2014-07"
+FILENAME = "201407" #.ods
 
 def valuetype(val):
     valuetype="string"
@@ -326,6 +327,6 @@ footer(table)
 # glue end
 
 doc.spreadsheet.addElement(table)
-doc.save("jixiao", True)
+doc.save(FILENAME, True)
 
 #EOF
