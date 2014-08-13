@@ -98,6 +98,7 @@ def single_odt(path, uname, create) :
 
     is_3m = UDATA[uname]['3m']
     money = UDATA[uname]['qian']
+    quality = UDATA[uname]['quality']    
 
     print "[single_odt] path="+path
     doc = load(path)
@@ -108,6 +109,7 @@ def single_odt(path, uname, create) :
         table.addElement(tr)
         # name column
         cell(tr, uname)
+        cell(tr, quality)
     
     contrib = []
 
@@ -125,7 +127,7 @@ def single_odt(path, uname, create) :
         print "[single_odt] num='"+num+"'"
         
         if create == 1 :
-            #table
+            # is 3month
             if idx == 6 :
                 cell(tr, int(num)*is_3m)
             else :
@@ -146,7 +148,7 @@ def single_odt(path, uname, create) :
     xuqiu = contrib[6]
     zuyuan = contrib[7]
     
-    all_as_code = float(daima + xuqiu*10*is_3m + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
+    all_as_code = float(daima*quality + xuqiu*10*is_3m + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
@@ -193,6 +195,7 @@ def header(table) :
     table.addElement(tr)
     
     cell(tr, "姓名", tableheader)
+    cell(tr, "难度系数", tableheader)
     
     cell(tr, "自行发贴", tableheader)
     cell(tr, "热心回复", tableheader)
