@@ -9,6 +9,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+from xxutils import getDate
+
 TS = 0.0
 XS = 0.0#xxdebug
 DEBUG = 0
@@ -16,10 +18,6 @@ DEBUG = 0
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
 from cfg import REVIEW
 from cfg import UDATA
-
-TITLE = "2014年 07 月 研发中心 绩效评估表"
-REVIEW = REVIEW + "/2014-07"
-FILENAME = "201407" #.ods
 
 def valuetype(val):
     valuetype="string"
@@ -170,13 +168,12 @@ def single_odt(path, uname, create) :
         cell(tr, score)
     
 def all_odt(table, create) :
-    for root, dirs, files in os.walk( REVIEW ):
+    for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
         for fn in files:
             single_odt(root+"/"+fn, get_name(fn), create)
 
 def header(table) :
     global DEBUG
-    global TITLE
 
     # title
 
@@ -187,7 +184,7 @@ def header(table) :
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
-    cell(tr, TITLE, bigtitle)
+    cell(tr, str(getDate().year) + "年 " + getDate().strftime("%m") + " 月 研发中心 绩效评估表", bigtitle)
 
     # table header
 
@@ -330,6 +327,6 @@ footer(table)
 # glue end
 
 doc.spreadsheet.addElement(table)
-doc.save(FILENAME, True)
+doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
 
 #EOF
