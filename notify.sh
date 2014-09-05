@@ -20,7 +20,7 @@ CMDFILE="rcmd.sh"
 XXUTILS="/tmp/xxutils.sh"
 
 # load useful functions
-wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh -o $XXUTILS \
+wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh -O $XXUTILS \
     && chmod a+x $XXUTILS \
     && . $XXUTILS
 
