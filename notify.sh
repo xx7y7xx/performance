@@ -10,7 +10,7 @@ mkdir -p "$JDIR"
 cd "$JDIR"
 
 # load useful functions
-wget https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh \
+wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh \
     && chmod a+x xxutils.sh \
     && . xxutils.sh
 
