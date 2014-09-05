@@ -210,6 +210,7 @@ def header(table) :
         cell(tr, "money score", tableheader)
     cell(tr, "绩效系数", tableheader)
 
+    cell(tr, "结果", tableheader)
     cell(tr, "备注", tableheader)
     
 def footer(table) :
