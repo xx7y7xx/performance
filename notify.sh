@@ -21,7 +21,7 @@ getusers
 # create ticket for each user.
 while read -r username;
 do
-    cmd='sudo python /home/chenyang/tool/newticket.py"'
+    cmd='sudo python /home/chenyang/tool/newticket.py'
     cmd="$cmd --reporter ci"
     cmd="$cmd --owner \"$username\""
     cmd="$cmd --type review"
