@@ -30,6 +30,7 @@ wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh 
 # Get user list from trac
 # gen userlist.txt
 getusers
+cat $ULIST
 
 # create ticket for each user.
 while read -r username;
