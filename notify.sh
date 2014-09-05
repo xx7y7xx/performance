@@ -53,6 +53,9 @@ do
     #rcmd "$IP" "$cmd"
 done < $ULIST
 
+# just for debug
+cat $CMDFILE
+
 rcmdfile "$IP" "$CMDFILE"
 
 #
