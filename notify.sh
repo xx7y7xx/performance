@@ -17,15 +17,15 @@ IP="192.168.1.153"
 ULIST="userlist.txt"
 DATE="`date +'%Y年%m月份'`"
 CMDFILE="rcmd.sh"
-
+XXUTILS="/tmp/xxutils.sh"
 
 # load useful functions
-wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh \
-    && chmod a+x xxutils.sh \
-    && . xxutils.sh
+wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh -o $XXUTILS \
+    && chmod a+x $XXUTILS \
+    && . $XXUTILS
 
 # just debug
-cat xxutils.sh
+cat $XXUTILS
 
 # create random dir for me
 JDIR=$( gettmpdir "jixiao" )
