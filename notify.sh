@@ -1,5 +1,18 @@
 #!/bin/bash
 
+#/**************************************************************************
+# *
+# *  This file is part of the OSC(Open Source Communit).
+# *  Copyright (C) by SanPolo Co.Ltd.
+# *  All rights reserved.
+# *
+# *  See http://osc.spolo.org/ for more information.
+# *
+# *  SanPolo Co.Ltd
+# *  http://www.spolo.org/  spolo@spolo.org sales@spolo.org
+# *
+#**************************************************************************/
+
 IP="192.168.1.153"
 ULIST="userlist.txt"
 DATE="`date +'%Y年%m月份'`"

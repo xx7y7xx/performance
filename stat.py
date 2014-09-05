@@ -1,6 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#/**************************************************************************
+# *
+# *  This file is part of the OSC(Open Source Communit).
+# *  Copyright (C) by SanPolo Co.Ltd.
+# *  All rights reserved.
+# *
+# *  See http://osc.spolo.org/ for more information.
+# *
+# *  SanPolo Co.Ltd
+# *  http://www.spolo.org/  spolo@spolo.org sales@spolo.org
+# *
+#**************************************************************************/
+
 import os
 from odf.opendocument import load
 from odf import text
