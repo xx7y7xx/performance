@@ -16,23 +16,29 @@
 IP="192.168.1.153"
 ULIST="userlist.txt"
 DATE="`date +'%Y年%m月份'`"
+CMDFILE="rcmd.sh"
 
-# create random dir for me
-JDIR="/tmp/jixiao_$RANDOM$RANDOM$RANDOM$RANDOM$RANDOM$RANDOM"
-mkdir -p "$JDIR"
-cd "$JDIR"
 
 # load useful functions
 wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh \
     && chmod a+x xxutils.sh \
     && . xxutils.sh
 
+# create random dir for me
+JDIR=$( gettmpdir "jixiao" )
+cd "$JDIR"
+
 # Get user list from trac
 # gen userlist.txt
 getusers
 cat $ULIST
 
+#
 # create ticket for each user.
+#
+
+echo "" > $CMDFILE
+
 while read -r username;
 do
     cmd='sudo python /home/chenyang/tool/newticket.py'
@@ -41,9 +47,13 @@ do
     cmd="$cmd --type review"
     cmd="$cmd --summary \"${DATE}绩效统计 - 每月自评表\""
     cmd="$cmd --description \"提交本月自评表\""
-    echo $cmd
-    rcmd "$IP" "$cmd"
+    echo $cmd >> $CMDFILE
+    # loop will break when using ssh
+    # look at this : http://stackoverflow.com/a/1396070
+    #rcmd "$IP" "$cmd"
 done < $ULIST
+
+rcmdfile "$IP" "$CMDFILE"
 
 #
 # send mail notification
