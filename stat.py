@@ -24,8 +24,6 @@ sys.setdefaultencoding('utf8')
 
 from xxutils import getDate
 
-TS = 0.0
-XS = 0.0#xxdebug
 DEBUG = 0
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
@@ -272,75 +270,85 @@ def footer(table) :
 # main
 #
 
-from odf.opendocument import OpenDocumentSpreadsheet
-from odf.style import Style, TextProperties, ParagraphProperties
-from odf.style import TableColumnProperties
-from odf.style import TableRowProperties
-from odf.text import P
-from odf.table import Table, TableColumn, TableRow, TableCell
+def main():
 
-doc = OpenDocumentSpreadsheet()
+    TS = 0.0
+    XS = 0.0#xxdebug
+    DEBUG = 0
 
-# Create a style for the table content. One we can modify
-# later in the word processor.
-tablecontents = Style(name="Table Contents", family="paragraph")
-tablecontents.addElement(ParagraphProperties(numberlines="false", linenumber="0"))
-doc.styles.addElement(tablecontents)
+    from odf.opendocument import OpenDocumentSpreadsheet
+    from odf.style import Style, TextProperties, ParagraphProperties
+    from odf.style import TableColumnProperties
+    from odf.style import TableRowProperties
+    from odf.text import P
+    from odf.table import Table, TableColumn, TableRow, TableCell
+    
+    doc = OpenDocumentSpreadsheet()
+    
+    # Create a style for the table content. One we can modify
+    # later in the word processor.
+    tablecontents = Style(name="Table Contents", family="paragraph")
+    tablecontents.addElement(ParagraphProperties(numberlines="false", linenumber="0"))
+    doc.styles.addElement(tablecontents)
+    
+    # Create automatic styles for the column widths.
+    # We want two different widths, one in inches, the other one in metric.
+    # ODF Standard section 15.9.1
+    widthwide = Style(name="Wwide", family="table-column")
+    widthwide.addElement(TableColumnProperties(columnwidth="1.0in"))
+    doc.automaticstyles.addElement(widthwide)
+    
+    # high height row
+    heighthigh = Style(name="Hhigh", family="table-row")
+    heighthigh.addElement(TableRowProperties(rowheight="1.2cm"))
+    doc.automaticstyles.addElement(heighthigh)
+    
+    # one big title
+    bigtitle = Style(name="Large title", family="table-cell")
+    bigtitle.addElement(
+        TextProperties(
+            fontfamily="WenQuanYi Micro Hei",
+            fontsize="15pt", fontsizeasian="15pt",
+            fontweight="bold", fontweightasian="bold"
+    ))
+    doc.styles.addElement(bigtitle)
+    
+    # style for table header
+    tableheader = Style(name="Table header", family="table-cell")
+    tableheader.addElement(
+        TextProperties(
+            fontweight="bold", fontweightasian="bold"
+    ))
+    doc.styles.addElement(tableheader)
+    
+    # style for table footer
+    tablefooter = Style(name="Large text", family="table-cell")
+    tablefooter.addElement(
+        TextProperties(
+            fontfamily="WenQuanYi Micro Hei",
+            fontsize="13pt", fontsizeasian="13pt",
+            fontweight="bold", fontweightasian="bold"
+    ))
+    tablefooter.addElement(ParagraphProperties(textalign="center"))
+    doc.styles.addElement(tablefooter)
+    
+    # Start the table, and describe the columns
+    table = Table(name="jixiao")
+    table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
+    
+    # glue start
+    get_total_money()
+    header(table)
+    all_odt(table, 0)
+    all_odt(table, 1)
+    footer(table)
+    # glue end
+    
+    doc.spreadsheet.addElement(table)
+    doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
 
-# Create automatic styles for the column widths.
-# We want two different widths, one in inches, the other one in metric.
-# ODF Standard section 15.9.1
-widthwide = Style(name="Wwide", family="table-column")
-widthwide.addElement(TableColumnProperties(columnwidth="1.0in"))
-doc.automaticstyles.addElement(widthwide)
 
-# high height row
-heighthigh = Style(name="Hhigh", family="table-row")
-heighthigh.addElement(TableRowProperties(rowheight="1.2cm"))
-doc.automaticstyles.addElement(heighthigh)
-
-# one big title
-bigtitle = Style(name="Large title", family="table-cell")
-bigtitle.addElement(
-    TextProperties(
-        fontfamily="WenQuanYi Micro Hei",
-        fontsize="15pt", fontsizeasian="15pt",
-        fontweight="bold", fontweightasian="bold"
-))
-doc.styles.addElement(bigtitle)
-
-# style for table header
-tableheader = Style(name="Table header", family="table-cell")
-tableheader.addElement(
-    TextProperties(
-        fontweight="bold", fontweightasian="bold"
-))
-doc.styles.addElement(tableheader)
-
-# style for table footer
-tablefooter = Style(name="Large text", family="table-cell")
-tablefooter.addElement(
-    TextProperties(
-        fontfamily="WenQuanYi Micro Hei",
-        fontsize="13pt", fontsizeasian="13pt",
-        fontweight="bold", fontweightasian="bold"
-))
-tablefooter.addElement(ParagraphProperties(textalign="center"))
-doc.styles.addElement(tablefooter)
-
-# Start the table, and describe the columns
-table = Table(name="jixiao")
-table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
-
-# glue start
-get_total_money()
-header(table)
-all_odt(table, 0)
-all_odt(table, 1)
-footer(table)
-# glue end
-
-doc.spreadsheet.addElement(table)
-doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
+if __name__ == '__main__':
+    main()
 
 #EOF
