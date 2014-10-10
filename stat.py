@@ -25,6 +25,8 @@ sys.setdefaultencoding('utf8')
 from xxutils import getDate
 
 DEBUG = 0
+TS = 0.0
+XS = 0.0#xxdebug
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
 from cfg import REVIEW
