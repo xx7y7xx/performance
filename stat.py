@@ -18,15 +18,19 @@ import os
 from odf.opendocument import load
 from odf import text
 
+from odf.opendocument import OpenDocumentSpreadsheet
+from odf.style import Style, TextProperties, ParagraphProperties
+from odf.style import TableColumnProperties
+from odf.style import TableRowProperties
+from odf.text import P
+from odf.table import Table, TableColumn, TableRow, TableCell
+
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 from xxutils import getDate
 
-DEBUG = 0
-TS = 0.0
-XS = 0.0#xxdebug
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
 from cfg import REVIEW
@@ -96,7 +100,7 @@ def cell(tr, val, style = None) :
     p = P(stylename=tablecontents,text=str(val))
     tc.addElement(p)
 
-def single_odt(path, uname, create) :
+def single_odt(path, uname, create, table) :
     global TS
     global XS
     global DEBUG
@@ -109,7 +113,8 @@ def single_odt(path, uname, create) :
 
     is_3m = UDATA[uname]['3m']
     money = UDATA[uname]['qian']
-    quality = UDATA[uname]['quality']    
+    quality = UDATA[uname]['quality']
+    print "[single_odt] quality of " + uname + " is " + str(quality)
 
     print "[single_odt] path="+path
     doc = load(path)
@@ -183,7 +188,7 @@ def single_odt(path, uname, create) :
 def all_odt(table, create) :
     for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
         for fn in files:
-            single_odt(root+"/"+fn, get_name(fn), create)
+            single_odt(root+"/"+fn, get_name(fn), create, table)
 
 def header(table) :
     global DEBUG
@@ -274,16 +279,27 @@ def footer(table) :
 
 def main():
 
+    # Start the table, and describe the columns
+    table = Table(name="jixiao")
+    table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
+    
+    # glue start
+    get_total_money()
+    header(table)
+    all_odt(table, 0)
+    all_odt(table, 1)
+    footer(table)
+    # glue end
+    
+    doc.spreadsheet.addElement(table)
+    doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
+
+
+if __name__ == '__main__':
+
     TS = 0.0
     XS = 0.0#xxdebug
     DEBUG = 0
-
-    from odf.opendocument import OpenDocumentSpreadsheet
-    from odf.style import Style, TextProperties, ParagraphProperties
-    from odf.style import TableColumnProperties
-    from odf.style import TableRowProperties
-    from odf.text import P
-    from odf.table import Table, TableColumn, TableRow, TableCell
     
     doc = OpenDocumentSpreadsheet()
     
@@ -334,23 +350,6 @@ def main():
     tablefooter.addElement(ParagraphProperties(textalign="center"))
     doc.styles.addElement(tablefooter)
     
-    # Start the table, and describe the columns
-    table = Table(name="jixiao")
-    table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
-    
-    # glue start
-    get_total_money()
-    header(table)
-    all_odt(table, 0)
-    all_odt(table, 1)
-    footer(table)
-    # glue end
-    
-    doc.spreadsheet.addElement(table)
-    doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
-
-
-if __name__ == '__main__':
     main()
 
 #EOF
