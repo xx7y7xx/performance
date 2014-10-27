@@ -14,10 +14,7 @@
 # *
 #**************************************************************************/
 
-import unittest
 import datetime
-
-import xxutils
 
 #reload(sys)
 #sys.setdefaultencoding('utf8') 
