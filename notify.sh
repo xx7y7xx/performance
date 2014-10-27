@@ -25,7 +25,7 @@ wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh?
     && . $XXUTILS
 
 # just debug
-cat $XXUTILS
+#cat $XXUTILS
 
 # create random dir for me
 JDIR=$( gettmpdir "jixiao" )
