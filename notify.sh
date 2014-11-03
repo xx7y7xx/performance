@@ -16,13 +16,15 @@
 IP="192.168.1.153"
 ULIST="userlist.txt"
 DATE="`date +'%Y年%m月份'`"
-CMDFILE="rcmd.sh"
+CMDFILE="/tmp/newticket_rcmd.sh"
 XXUTILS="/tmp/xxutils.sh"
+NEWTICKET="/tmp/newticket.py"
 
 # load useful functions
 wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh?$RANDOM -O $XXUTILS \
     && chmod a+x $XXUTILS \
     && . $XXUTILS
+wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.sh?$RANDOM -O $NEWTICKET
 
 # just debug
 #cat $XXUTILS
@@ -47,6 +49,7 @@ do
     cmd='sudo python /home/chenyang/tool/newticket.py'
     cmd="$cmd --reporter ci"
     cmd="$cmd --owner \"$username\""
+    cmd="$cmd --cc \"chenyang\""
     cmd="$cmd --type review"
     cmd="$cmd --summary \"${DATE}绩效统计 - 每月自评表\""
     cmd="$cmd --description \"提交本月自评表\""
@@ -55,6 +58,18 @@ do
     # look at this : http://stackoverflow.com/a/1396070
     #rcmd "$IP" "$cmd"
 done < $ULIST
+
+#
+# create ticket for chenyang
+#
+cmd="sudo python $NEWTICKET"
+cmd="$cmd --reporter chenyang"
+cmd="$cmd --owner chenyang"
+cmd="$cmd --cc chenyang"
+cmd="$cmd --type review"
+cmd="$cmd --summary \"${DATE}绩效统计\""
+cmd="$cmd --description \"\""
+echo $cmd >> $CMDFILE
 
 # just for debug
 cat $CMDFILE
