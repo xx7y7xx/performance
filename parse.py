@@ -145,4 +145,10 @@ def get_file_list() :
 
     return ret
 
+def create_ods(filename):
+    doc = OpenDocumentSpreadsheet()
+    #doc.spreadsheet.addElement(table)
+    #doc.save(filename, True) # add "ods" as suffix
+    doc.save(filename) # not add "ods" as suffix
+
 #EOF

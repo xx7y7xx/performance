@@ -14,25 +14,31 @@
 # *
 #**************************************************************************/
 
+
+import os
+
 import unittest
 import datetime
 
 from parse import parse_odt
 from parse import get_file_list
+from parse import create_ods
 
 #reload(sys)
-#sys.setdefaultencoding('utf8') 
+#sys.setdefaultencoding('utf8')
+
+TESTDIR = "/home/chenyang/source/performance/testdata"
 
 class parse_Tests(unittest.TestCase):
     def test1(self):
         expect = [11200, 3000, 698, 60, 50, 40, 30, 20]
-        nl = parse_odt("testdata/test1.odt")
+        nl = parse_odt(TESTDIR+"/test1.odt")
         log = "\nExpect : %s\nBut return %s" % (expect, nl)
         self.assertTrue(nl == expect, msg = log)
 
     def test2(self):
         expect = [4313, 422, 0, 0, 16174, 2, 0, 0]
-        nl = parse_odt("testdata/test2.odt")
+        nl = parse_odt(TESTDIR+"/test2.odt")
         log = "\nExpect : %s\nBut return %s" % (expect, nl)
         #self.assertTrue(nl == expect, msg = log)
 
@@ -54,6 +60,18 @@ class get_file_list_Tests(unittest.TestCase):
         ul = get_file_list()
         log = "\nExpect : %s not in user list array.\nBut list is %s" % (not_expect, ul)
         self.assertTrue(not_expect not in ul, msg = log)
+
+class create_ods_Tests(unittest.TestCase):
+    def test1(self):
+        """Test create_ods function
+        must create a ods file
+        """
+        expect = TESTDIR+"/create_ods.ods"
+        create_ods(expect)
+        log = "\nExpect : %s file created.\nBut file not exist" % (expect)
+        self.assertTrue(os.path.isfile(expect), msg = log)
+        print "Try to remove test file..."
+        os.remove(expect)
 
 def main():
     unittest.main()
