@@ -20,6 +20,7 @@ import datetime
 #sys.setdefaultencoding('utf8') 
 
 def getDate(now = datetime.datetime.now()):
+    """Get the stat month of this time."""
     if now.day > 15 :
         ret = datetime.datetime(now.year, now.month, 1)
     else:

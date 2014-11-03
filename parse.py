@@ -14,8 +14,11 @@
 # *
 #**************************************************************************/
 
+# common lib
 import os
+import re
 
+# need opendocument lib
 from odf import text
 from odf.opendocument import load
 from odf.opendocument import OpenDocumentSpreadsheet
@@ -24,6 +27,15 @@ from odf.style import TableColumnProperties
 from odf.style import TableRowProperties
 from odf.text import P
 from odf.table import Table, TableColumn, TableRow, TableCell
+
+# need download file from web.
+import urllib2
+from urllib2 import HTTPError
+
+# fix chinese in code
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 def _get_num(para) :
     num = ""
@@ -84,4 +96,53 @@ def parse_odt(path) :
     
     return contrib
     
+def get_file_list() :
+    """Get user list from glue trac."""
+    try:
+        username = "ci"
+        password = "sp12345678"
+        top_level_url = "http://glue.spolo.org"
+        url = "http://glue.spolo.org/trac/glue/wiki/%E5%BC%80%E5%8F%91%E4%BA%BA%E5%91%98%E4%BF%A1%E6%81%AF?format=txt"
+
+        # create a password manager
+        password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        
+        # Add the username and password.
+        # If we knew the realm, we could use it instead of None.
+        password_mgr.add_password(None, top_level_url, username, password)
+        
+        handler = urllib2.HTTPBasicAuthHandler(password_mgr)
+        
+        # create "opener" (OpenerDirector instance)
+        opener = urllib2.build_opener(handler)
+        
+        # use the opener to fetch a URL
+        response = opener.open(url)
+
+    except HTTPError as e:
+        msg = "URL : %s\n" % url
+        msg += 'Server return code : %s' % e.code
+        print(msg)
+    #except e:
+    #    print(('Unexpected exception thrown:', e))
+
+    raw_data = response.read().decode('utf-8')
+    #print raw_data
+
+    # get real developer
+    ret = []
+    for line in raw_data.splitlines():
+        # find all developer from email address.
+        m = re.search(r"(\w+)@spolo.org", line)
+        if m:
+            name = m.group(1)
+
+            # not developer.
+            if name in ["liwei", "hanlu", "changyushan", "peizhelun", "tangying"]:
+                continue
+
+            ret.append(name)
+
+    return ret
+
 #EOF
