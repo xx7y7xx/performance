@@ -111,6 +111,8 @@ def single_odt(path, uname, create, table) :
     if uname not in UDATA :
         return False
 
+    print "[single_odt] stat " + uname
+
     is_3m = UDATA[uname]['3m']
     money = UDATA[uname]['qian']
     quality = UDATA[uname]['quality']
@@ -165,6 +167,8 @@ def single_odt(path, uname, create, table) :
     zuyuan = contrib[7]
     
     all_as_code = float(daima*quality + xuqiu*10*is_3m + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
+    print "all_as_code = float(daima*quality + xuqiu*10*is_3m + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)"
+    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"/10"
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
