@@ -65,7 +65,7 @@ done < $ULIST
 cmd="sudo python $NEWTICKET"
 cmd="$cmd --reporter chenyang"
 cmd="$cmd --owner chenyang"
-cmd="$cmd --cc chenyang"
+cmd="$cmd --cc \"glue@spolo.org\""
 cmd="$cmd --type review"
 cmd="$cmd --summary \"${DATE}绩效统计\""
 cmd="$cmd --description \"\""
