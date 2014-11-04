@@ -21,9 +21,11 @@ import unittest
 import datetime
 
 from parse import parse_odt
+from parse import calc_perf
 from parse import get_uname_list
 from parse import create_ods
 from parse import get_3m_uname_list
+
 
 #reload(sys)
 #sys.setdefaultencoding('utf8')
@@ -42,6 +44,25 @@ class parse_Tests(unittest.TestCase):
         nl = parse_odt(TESTDIR+"/test2.odt")
         log = "\nExpect : %s\nBut return %s" % (expect, nl)
         #self.assertTrue(nl == expect, msg = log)
+
+class calc_perf_Tests(unittest.TestCase):
+    def test1(self):
+        # config
+        from cfg import REVIEW
+        from cfg import UDATA
+
+        expect = {
+            'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20],
+            'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20],
+            'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20],
+            'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20],
+            'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20],
+            'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20]
+        }
+        pf = calc_perf(TESTDIR+"/2014-10")
+        print pf
+        log = "\nExpect : %s\nBut return %s" % (expect, pf)
+        #self.assertTrue(pf == expect, msg = log)
 
 class get_uname_list_Tests(unittest.TestCase):
     def test1(self):
