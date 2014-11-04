@@ -96,7 +96,7 @@ def parse_odt(path) :
     
     return contrib
     
-def get_file_list() :
+def get_uname_list() :
     """Get user list from glue trac."""
     try:
         username = "ci"
