@@ -37,6 +37,16 @@ from parse import get_uname_list
 from cfg import REVIEW
 from cfg import UDATA
 
+#
+# global variable
+#
+
+RESULTMSG = """
+=========================
+=     Result Message    =
+=========================
+"""
+
 def valuetype(val):
     valuetype="string"
     if isinstance(val,str): valuetype="string"
@@ -188,11 +198,12 @@ def single_odt(path, uname, create, table) :
         cell(tr, score)
     
 def all_odt(table, create) :
+    global RESULTMSG
     uname_list = get_uname_list()
     for uname in uname_list:
         fpath = REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") + "/" + uname + ".odt"
         if not os.path.isfile(fpath):
-            print "[WARNING] " + uname + ".odt is not exist."
+            RESULTMSG += "[WARNING] " + uname + ".odt is not exist.\n"
             continue
         single_odt(fpath, uname, create, table)
 
@@ -299,6 +310,8 @@ def main():
     
     doc.spreadsheet.addElement(table)
     doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
+
+    print RESULTMSG
 
 
 if __name__ == '__main__':
