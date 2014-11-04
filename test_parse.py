@@ -23,11 +23,12 @@ import datetime
 from parse import parse_odt
 from parse import get_uname_list
 from parse import create_ods
+from parse import get_3m_uname_list
 
 #reload(sys)
 #sys.setdefaultencoding('utf8')
 
-TESTDIR = "/home/chenyang/source/performance/testdata"
+TESTDIR = "/home/chenyang/source/performance2/testdata"
 
 class parse_Tests(unittest.TestCase):
     def test1(self):
@@ -72,6 +73,15 @@ class create_ods_Tests(unittest.TestCase):
         self.assertTrue(os.path.isfile(expect), msg = log)
         print "Try to remove test file..."
         os.remove(expect)
+
+class get_3m_uname_list_Tests(unittest.TestCase):
+    def test1(self):
+        """get 3m boost user list from txt file."""
+        expect = ['fengmingming', 'zhaojinpeng']
+        ul = get_3m_uname_list(TESTDIR+"/boost.txt")
+        log = "\nExpect : %s .\nBut return: %s" % (expect, ul)
+        # "list" is ordered, but "set" is unordered.
+        self.assertTrue(set(expect) == set(ul), msg = log)
 
 def main():
     unittest.main()
