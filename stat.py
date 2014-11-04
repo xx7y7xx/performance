@@ -31,6 +31,7 @@ sys.setdefaultencoding('utf8')
 
 from xxutils import getDate
 from parse import get_uname_list
+from parse import get_3m_uname_list
 
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
@@ -46,6 +47,8 @@ RESULTMSG = """
 =     Result Message    =
 =========================
 """
+
+BOOSTTXT = "boost.txt"
 
 def valuetype(val):
     valuetype="string"
@@ -121,7 +124,7 @@ def single_odt(path, uname, create, table) :
 
     print "[single_odt] stat " + uname
 
-    is_3m = UDATA[uname]['3m']
+    is_3m = ( uname in get_3m_uname_list(BOOSTTXT) )
     money = UDATA[uname]['qian']
     quality = UDATA[uname]['quality']
     print "[single_odt] quality of " + uname + " is " + str(quality)
