@@ -1,2 +1,4 @@
 - 代码重构，目标是可以进行unittest。
 - 薪资和user list拆分开。
+- os undepend file sep
+- multithread parse odt

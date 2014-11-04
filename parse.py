@@ -95,8 +95,69 @@ def parse_odt(path) :
         idx += 1
     
     return contrib
-    
-def get_uname_list() :
+
+def calc_perf(odt_dir):
+    """Calculate all the users' performance data."""
+    pf = {}
+
+    # prepare contrib data
+    all_work = 0
+    uname_list = get_uname_list()
+    udata_list = get_udata_list()
+    for uname in uname_list:
+        fpath = odt_dir + "/" + uname + ".odt"
+        if not os.path.isfile(fpath):
+            continue
+
+        pf[uname] = {}
+
+        contrib = parse_odt(fpath)
+
+        is_3m = ( uname in get_3m_uname_list() )
+        pf[uname]['money'] = udata_list[uname]['qian']
+        pf[uname]['quality'] = quality = udata_list[uname]['quality']
+
+        # every single contrib
+        pf[uname]['self_ticket'] = self_ticket = contrib[0]
+        pf[uname]['other_ticket'] = other_ticket = contrib[1]
+        pf[uname]['wiki'] = wiki = contrib[2]
+        pf[uname]['wiki_code'] = wiki_code = contrib[3]
+        pf[uname]['code'] = code = contrib[4]
+        pf[uname]['bug_ticket'] = bug_ticket = contrib[5]
+        pf[uname]['boost'] = boost = contrib[6]
+        pf[uname]['member'] = member = contrib[7]
+
+        single_work = float(code*quality + boost*10*is_3m + bug_ticket*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + member/10)
+        all_work += single_work
+        pf[uname]['amount_of_work'] = single_work
+
+    for uname in pf:
+        pf[uname]['score'] = (pf[uname]['amount_of_work'] / all_work) / (pf[uname]['money'] / get_total_money())
+    return pf
+
+def get_odt_dir():
+    """Get the dir contains odt files
+    usally this is a samba server mounted on local machine.
+    """
+    global REVIEW
+    return REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") 
+
+def get_total_money():
+    """Sum all users' money"""
+    udata_list = get_udata_list()
+    tm = 0
+    for n,d in udata_list.items() :
+        #if DEBUG is 1 :
+        #    print "[get_total_money] name : '"+n+"'"
+        #    print "[get_total_money] money : '"+str(d['qian'])+"'"
+        tm += d['qian']
+    return tm
+
+def get_udata_list():
+    from cfg import UDATA
+    return UDATA
+
+def get_uname_list():
     """Get user list from glue trac."""
     try:
         username = "ci"
@@ -151,7 +212,7 @@ def create_ods(filename):
     #doc.save(filename, True) # add "ods" as suffix
     doc.save(filename) # not add "ods" as suffix
 
-def get_3m_uname_list(fname):
+def get_3m_uname_list(fname = "boost.txt"):
     with open(fname) as f:
         #ul = f.readlines()
         ul = f.read().splitlines()
