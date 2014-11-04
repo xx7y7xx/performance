@@ -30,6 +30,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from xxutils import getDate
+from parse import get_uname_list
 
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
@@ -43,9 +44,6 @@ def valuetype(val):
     if isinstance(val,float): valuetype="float"
     if isinstance(val,bool): valuetype="boolean"
     return valuetype
-
-def get_name(fn) :
-    return fn.replace(".odt", "")
 
 def get_num(para) :
     num = ""
@@ -190,9 +188,13 @@ def single_odt(path, uname, create, table) :
         cell(tr, score)
     
 def all_odt(table, create) :
-    for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
-        for fn in files:
-            single_odt(root+"/"+fn, get_name(fn), create, table)
+    uname_list = get_uname_list()
+    for uname in uname_list:
+        fpath = REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") + "/" + uname + ".odt"
+        if not os.path.isfile(fpath):
+            print "[WARNING] " + uname + ".odt is not exist."
+            continue
+        single_odt(fpath, uname, create, table)
 
 def header(table) :
     global DEBUG
