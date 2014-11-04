@@ -151,4 +151,10 @@ def create_ods(filename):
     #doc.save(filename, True) # add "ods" as suffix
     doc.save(filename) # not add "ods" as suffix
 
+def get_3m_uname_list(fname):
+    with open(fname) as f:
+        #ul = f.readlines()
+        ul = f.read().splitlines()
+    return ul
+
 #EOF
