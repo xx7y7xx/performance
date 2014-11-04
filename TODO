@@ -1,4 +1,3 @@
 - 代码重构，目标是可以进行unittest。
 - 三个月加成的标志位和user list拆分开。
-- user list从wiki获取。
 - 薪资和user list拆分开。
