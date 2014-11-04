@@ -21,7 +21,7 @@ import unittest
 import datetime
 
 from parse import parse_odt
-from parse import get_file_list
+from parse import get_uname_list
 from parse import create_ods
 
 #reload(sys)
@@ -42,22 +42,22 @@ class parse_Tests(unittest.TestCase):
         log = "\nExpect : %s\nBut return %s" % (expect, nl)
         #self.assertTrue(nl == expect, msg = log)
 
-class get_file_list_Tests(unittest.TestCase):
+class get_uname_list_Tests(unittest.TestCase):
     def test1(self):
-        """Test get_file_list function
+        """Test get_uname_list function
         must include people
         """
         expect = "chenzhongming"
-        ul = get_file_list()
+        ul = get_uname_list()
         log = "\nExpect : %s in user list array.\nBut list is %s" % (expect, ul)
         self.assertTrue(expect in ul, msg = log)
 
     def test2(self):
-        """Test get_file_list function
+        """Test get_uname_list function
         must not include people
         """
         not_expect = "chenyang"
-        ul = get_file_list()
+        ul = get_uname_list()
         log = "\nExpect : %s not in user list array.\nBut list is %s" % (not_expect, ul)
         self.assertTrue(not_expect not in ul, msg = log)
 
