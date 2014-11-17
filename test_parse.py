@@ -60,7 +60,7 @@ class calc_perf_Tests(unittest.TestCase):
             'chenyang' : [11200, 3000, 698, 60, 50, 40, 30, 20]
         }
         pf = calc_perf(TESTDIR+"/2014-10")
-        print pf
+        #print pf
         log = "\nExpect : %s\nBut return %s" % (expect, pf)
         #self.assertTrue(pf == expect, msg = log)
 
