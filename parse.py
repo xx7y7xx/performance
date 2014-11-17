@@ -158,7 +158,8 @@ def get_udata_list():
     return UDATA
 
 def get_uname_list():
-    """Get user list from glue trac."""
+    """Get user list from glue trac.
+    should move to xxutil lib"""
     try:
         username = "ci"
         password = "sp12345678"
