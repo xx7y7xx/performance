@@ -16,6 +16,7 @@
 IP="192.168.1.153"
 ULIST="userlist.txt"
 DATE="`date +'%Y年%m月份'`"
+NEWTICKETURL="https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.py?$RANDOM"
 
 # 192.168.2.21
 CMDFILE="/tmp/newticket_rcmd.sh"
@@ -41,7 +42,10 @@ cd "$JDIR"
 getusers
 cat $ULIST
 
-echo "wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.py?$RANDOM -O $NEWTICKET" > $CMDFILE
+# prepare remote shell script
+echo "" > $CMDFILE
+echo "curl $NEWTICKETURL"
+echo "wget -q $NEWTICKETURL -O $NEWTICKET" > $CMDFILE
 
 #
 # create ticket for each user.
