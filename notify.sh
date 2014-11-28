@@ -24,7 +24,7 @@ NEWTICKET="/tmp/newticket.py"
 wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh?$RANDOM -O $XXUTILS \
     && chmod a+x $XXUTILS \
     && . $XXUTILS
-wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.sh?$RANDOM -O $NEWTICKET
+wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.py?$RANDOM -O $NEWTICKET
 
 # just debug
 #cat $XXUTILS
@@ -46,7 +46,7 @@ echo "" > $CMDFILE
 
 while read -r username;
 do
-    cmd='sudo python /home/chenyang/tool/newticket.py'
+    cmd="sudo python $NEWTICKET"
     cmd="$cmd --reporter ci"
     cmd="$cmd --owner \"$username\""
     cmd="$cmd --cc \"chenyang\""
