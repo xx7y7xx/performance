@@ -44,8 +44,8 @@ cat $ULIST
 
 # prepare remote shell script
 echo "" > $CMDFILE
-echo "curl $NEWTICKETURL"
-echo "wget -q $NEWTICKETURL -O $NEWTICKET" > $CMDFILE
+echo "curl $NEWTICKETURL" >> $CMDFILE
+echo "wget -q $NEWTICKETURL -O $NEWTICKET" >> $CMDFILE
 
 #
 # create ticket for each user.
