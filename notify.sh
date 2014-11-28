@@ -16,15 +16,18 @@
 IP="192.168.1.153"
 ULIST="userlist.txt"
 DATE="`date +'%Y年%m月份'`"
+
+# 192.168.2.21
 CMDFILE="/tmp/newticket_rcmd.sh"
 XXUTILS="/tmp/xxutils.sh"
+
+# 192.168.1.153
 NEWTICKET="/tmp/newticket.py"
 
 # load useful functions
 wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/xxutils.sh?$RANDOM -O $XXUTILS \
     && chmod a+x $XXUTILS \
     && . $XXUTILS
-wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.py?$RANDOM -O $NEWTICKET
 
 # just debug
 #cat $XXUTILS
@@ -38,11 +41,12 @@ cd "$JDIR"
 getusers
 cat $ULIST
 
+echo "wget -q https://raw.githubusercontent.com/sp-chenyang/xxutils/master/newticket.py?$RANDOM -O $NEWTICKET" > $CMDFILE
+
 #
 # create ticket for each user.
 #
 
-echo "" > $CMDFILE
 
 while read -r username;
 do
