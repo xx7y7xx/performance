@@ -70,7 +70,7 @@ done < $ULIST
 # create ticket for chenyang
 #
 cmd="sudo python $NEWTICKET"
-cmd="$cmd --reporter chenyang"
+cmd="$cmd --reporter ci"
 cmd="$cmd --owner chenyang"
 cmd="$cmd --cc \"glue@spolo.org\""
 cmd="$cmd --type review"
