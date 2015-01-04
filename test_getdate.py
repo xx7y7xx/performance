@@ -36,6 +36,12 @@ class getDate_Tests(unittest.TestCase):
             date = xxutils.getDate(fakenow)
             self.assertTrue(date == expect)
 
+    def test2(self):
+        expect = datetime.datetime(2014, 12, 1)
+        fakenow = datetime.datetime(2015, 1, 4)
+        date = xxutils.getDate(fakenow)
+        self.assertTrue(date == expect)
+
 def main():
     unittest.main()
 
