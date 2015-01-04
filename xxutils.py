@@ -21,10 +21,19 @@ import datetime
 
 def getDate(now = datetime.datetime.now()):
     """Get the stat month of this time."""
-    if now.day > 15 :
-        ret = datetime.datetime(now.year, now.month, 1)
-    else:
-        ret = datetime.datetime(now.year, (now.month -1), 1)
-    return ret
+    now_day = now.day
+    now_month = now.month
+    now_year = now.year
+
+    if now_day <= 15 :
+        if now_month == 1:
+            # last year
+            now_month = 12
+            now_year = now_year - 1
+        else:
+            now_month = now_month - 1
+            assert now_month > 0
+
+    return datetime.datetime(now_year, now_month, 1)
 
 # end
