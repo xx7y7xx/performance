@@ -14,29 +14,25 @@
 # *
 #**************************************************************************/
 
+import unittest
 import datetime
+
+import xxutils
 
 #reload(sys)
 #sys.setdefaultencoding('utf8') 
 
-def get_name(fn) :
-    return fn.replace(".odt", "").strip()
+class getDate_Tests(unittest.TestCase):
+    def test1(self):
+        expect = "liuzhishuang"
+        filename = "liuzhishuang .odt"
+        username = xxutils.get_name(filename)
+        self.assertTrue(username == expect)
 
-def getDate(now = datetime.datetime.now()):
-    """Get the stat month of this time."""
-    now_day = now.day
-    now_month = now.month
-    now_year = now.year
+def main():
+    unittest.main()
 
-    if now_day <= 15 :
-        if now_month == 1:
-            # last year
-            now_month = 12
-            now_year = now_year - 1
-        else:
-            now_month = now_month - 1
-            assert now_month > 0
-
-    return datetime.datetime(now_year, now_month, 1)
+if __name__ == '__main__':
+    main()
 
 # end

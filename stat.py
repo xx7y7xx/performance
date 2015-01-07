@@ -30,11 +30,13 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 from xxutils import getDate
+from xxutils import get_name
 
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
 from cfg import REVIEW
 from cfg import UDATA
+from cfg import TMQ
 
 def valuetype(val):
     valuetype="string"
@@ -43,9 +45,6 @@ def valuetype(val):
     if isinstance(val,float): valuetype="float"
     if isinstance(val,bool): valuetype="boolean"
     return valuetype
-
-def get_name(fn) :
-    return fn.replace(".odt", "")
 
 def get_num(para) :
     num = ""
@@ -91,7 +90,8 @@ def get_total_money() :
         XS += d['qian']
 
 def cell(tr, val, style = None) :
-    print "[cell] type="+str(type(val))
+    print "[cell] type=%s" % str(type(val))
+    print "[cell] type=%s" % str(val)
     if style is None :
         tc = TableCell(valuetype=valuetype(val), value=str(val))
     else :
@@ -166,9 +166,9 @@ def single_odt(path, uname, create, table) :
     xuqiu = contrib[6]
     zuyuan = contrib[7]
     
-    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
-    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)"
-    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"/10"
+    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)
+    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)"
+    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"*"+str(TMQ)
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
@@ -190,6 +190,7 @@ def single_odt(path, uname, create, table) :
         cell(tr, score)
     
 def all_odt(table, create) :
+    print "[all_odt] review path is %s" % REVIEW
     for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
         for fn in files:
             single_odt(root+"/"+fn, get_name(fn), create, table)
