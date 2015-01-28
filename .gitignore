@@ -1,5 +1,6 @@
 .*.swp
 *.pyc
 *.ods
+*.db
 cfg.py
 stat.log
