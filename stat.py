@@ -34,9 +34,9 @@ from xxutils import get_name
 
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
-from cfg import REVIEW
-from cfg import UDATA
-from cfg import TMQ
+#from cfg import REVIEW
+#from cfg import UDATA
+#from cfg import TMQ
 
 def valuetype(val):
     valuetype="string"
@@ -89,6 +89,31 @@ def get_total_money() :
             print "[get_total_money] money : '"+str(d['qian'])+"'"
         XS += d['qian']
 
+def get_udata():
+    global UDATA
+
+    UDATA = {}
+
+    import sqlite3 as lite
+    con = lite.connect("jixiao.db")
+
+    with con:
+
+        cur = con.cursor()
+        cur.execute("SELECT * FROM user4")
+
+        rows = cur.fetchall()
+
+        for row in rows:
+            name = row[1]
+            UDATA[row[1]] = {}
+            UDATA[row[1]]["qian"] = row[2]
+            UDATA[row[1]]["3m"] = row[3]
+            UDATA[row[1]]["quality"] = row[4]
+            print "[get_udata] %s : %s : %s : %s" % ( name, row[2], row[3], row[4] )
+
+    print UDATA
+
 def cell(tr, val, style = None) :
     print "[cell] type=%s" % str(type(val))
     print "[cell] type=%s" % str(val)
@@ -106,10 +131,6 @@ def single_odt(path, uname, create, table) :
     global DEBUG
     global REVIEW
     global UDATA
-
-    # exclude users who is not RD
-    if uname not in UDATA :
-        return False
 
     print "[single_odt] stat " + uname
 
@@ -190,10 +211,18 @@ def single_odt(path, uname, create, table) :
         cell(tr, score)
     
 def all_odt(table, create) :
+    global UDATA
+    get_udata()
     print "[all_odt] review path is %s" % REVIEW
-    for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
-        for fn in files:
-            single_odt(root+"/"+fn, get_name(fn), create, table)
+    #for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
+    #    for fn in files:
+    #        single_odt(root+"/"+fn, get_name(fn), create, table)
+    for name in UDATA:
+        filepath = REVIEW + "/" + name + ".ods"
+        if not os.path.isfile(filepath):
+            print "[all_odt] file %s not exist!" % filepath
+            continue
+        single_odt(filepath, name, create, table)
 
 def header(table) :
     global DEBUG
@@ -305,6 +334,13 @@ if __name__ == '__main__':
     TS = 0.0
     XS = 0.0#xxdebug
     DEBUG = 0
+    UDATA = {}
+
+    # team member quality
+    TMQ = 0.5
+    
+    # path
+    REVIEW = "/home/chenyang/mnt/share/Review"
     
     doc = OpenDocumentSpreadsheet()
     
