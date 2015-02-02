@@ -164,7 +164,14 @@ def single_odt(path, uname, create, table) :
             continue
         
         num = get_num(para)
-        print "[single_odt] num='"+num+"'"
+        print "[single_odt] idx='%s'" % str(idx)
+        print "[single_odt] num='%s'" % str(num)
+
+        if idx == 5:
+            # bug number not large than 100
+            #assert num < 100
+            if num >= 100:
+                num = 0.0
         
         if create == 1 :
             # is 3month
