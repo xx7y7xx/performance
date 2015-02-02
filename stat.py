@@ -83,6 +83,7 @@ def get_num(para) :
 def get_total_money() :
     global XS
     global UDATA
+    global DEBUG
     for n,d in UDATA.items() :
         if DEBUG is 1 : 
             print "[get_total_money] name : '"+n+"'"
@@ -201,6 +202,10 @@ def single_odt(path, uname, create, table) :
             print "XS(total money)="+str(XS)
         print "TS="+str(TS)
 
+        assert TS != 0
+        assert XS != 0
+
+        print "score = (%s/%s)/(%s/%s)" % (str(all_as_code), str(TS), str(money), str(XS))
         score = (all_as_code / TS) / (money / XS)
 
         cell(tr, all_as_code)               # all as score
@@ -216,7 +221,6 @@ def get_file_path(name):
 
 def all_odt(table, create) :
     global UDATA
-    get_udata()
     print "[all_odt] review path is %s" % REVIEW
     #for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
     #    for fn in files:
@@ -322,6 +326,7 @@ def main():
     table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
     
     # glue start
+    get_udata()
     get_total_money()
     header(table)
     all_odt(table, 0)
