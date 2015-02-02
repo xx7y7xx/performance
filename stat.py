@@ -209,7 +209,11 @@ def single_odt(path, uname, create, table) :
             cell(tr, money)                 # money
             cell(tr, (money / XS))          # money score
         cell(tr, score)
-    
+
+def get_file_path(name):
+    global REVIEW
+    return REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") + "/" + name + ".odt"
+
 def all_odt(table, create) :
     global UDATA
     get_udata()
@@ -218,7 +222,7 @@ def all_odt(table, create) :
     #    for fn in files:
     #        single_odt(root+"/"+fn, get_name(fn), create, table)
     for name in UDATA:
-        filepath = REVIEW + "/" + name + ".ods"
+        filepath = get_file_path(name)
         if not os.path.isfile(filepath):
             print "[all_odt] file %s not exist!" % filepath
             continue
