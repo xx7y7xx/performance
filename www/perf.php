@@ -134,7 +134,7 @@ if ( isset($_GET["action"]) && $_GET["action"] == "status" )
                     refresh_iframe();
                     $bar.removeClass('animate');
                     $modal.modal('hide');
-                }, 10000);
+                }, 20000);
             });
 
         });
