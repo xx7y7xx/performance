@@ -76,9 +76,9 @@ def get_num(para) :
                         num += pst
     print "[get_num] num='"+num+"'"
     if num == "" :
-        return "0"
+        return 0
     else :
-        return num
+        return int(num)
 
 def get_total_money() :
     global XS
@@ -168,20 +168,22 @@ def single_odt(path, uname, create, table) :
         print "[single_odt] num='%s'" % str(num)
 
         if idx == 5:
+            print "[single_odt] bug column"
             # bug number not large than 100
             #assert num < 100
             if num >= 100:
+                print "[single_odt] bug number large than 100"
                 num = 0.0
         
         if create == 1 :
             # is 3month
             if idx == 6 :
-                cell(tr, int(num)*is_3m)
+                cell(tr, num*is_3m)
             else :
-                cell(tr, int(num))
+                cell(tr, num)
         
         # store contrib
-        contrib.append(int(num))
+        contrib.append(num)
         
         idx += 1
     
