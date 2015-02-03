@@ -35,8 +35,9 @@ from parse import get_3m_uname_list
 
 
 #cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
-from cfg import REVIEW
-from cfg import UDATA
+#from cfg import REVIEW
+#from cfg import UDATA
+#from cfg import TMQ
 
 #
 # global variable
@@ -88,21 +89,48 @@ def get_num(para) :
                         num += pst
     print "[get_num] num='"+num+"'"
     if num == "" :
-        return "0"
+        return 0
     else :
-        return num
+        return int(num)
 
 def get_total_money() :
     global XS
     global UDATA
+    global DEBUG
     for n,d in UDATA.items() :
         if DEBUG is 1 : 
             print "[get_total_money] name : '"+n+"'"
             print "[get_total_money] money : '"+str(d['qian'])+"'"
         XS += d['qian']
 
+def get_udata():
+    global UDATA
+
+    UDATA = {}
+
+    import sqlite3 as lite
+    con = lite.connect("jixiao.db")
+
+    with con:
+
+        cur = con.cursor()
+        cur.execute("SELECT * FROM user4")
+
+        rows = cur.fetchall()
+
+        for row in rows:
+            name = row[1]
+            UDATA[row[1]] = {}
+            UDATA[row[1]]["qian"] = row[2]
+            UDATA[row[1]]["3m"] = row[3]
+            UDATA[row[1]]["quality"] = row[4]
+            print "[get_udata] %s : %s : %s : %s" % ( name, row[2], row[3], row[4] )
+
+    print UDATA
+
 def cell(tr, val, style = None) :
-    print "[cell] type="+str(type(val))
+    print "[cell] type=%s" % str(type(val))
+    print "[cell] type=%s" % str(val)
     if style is None :
         tc = TableCell(valuetype=valuetype(val), value=str(val))
     else :
@@ -117,10 +145,6 @@ def single_odt(path, uname, create, table) :
     global DEBUG
     global REVIEW
     global UDATA
-
-    # exclude users who is not RD
-    if uname not in UDATA :
-        return False
 
     print "[single_odt] stat " + uname
 
@@ -153,17 +177,26 @@ def single_odt(path, uname, create, table) :
             continue
         
         num = get_num(para)
-        print "[single_odt] num='"+num+"'"
+        print "[single_odt] idx='%s'" % str(idx)
+        print "[single_odt] num='%s'" % str(num)
+
+        if idx == 5:
+            print "[single_odt] bug column"
+            # bug number not large than 100
+            #assert num < 100
+            if num >= 100:
+                print "[single_odt] bug number large than 100"
+                num = 0.0
         
         if create == 1 :
             # is 3month
             if idx == 6 :
-                cell(tr, int(num)*is_3m)
+                cell(tr, num*is_3m)
             else :
-                cell(tr, int(num))
+                cell(tr, num)
         
         # store contrib
-        contrib.append(int(num))
+        contrib.append(num)
         
         idx += 1
     
@@ -177,9 +210,9 @@ def single_odt(path, uname, create, table) :
     xuqiu = contrib[6]
     zuyuan = contrib[7]
     
-    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)
-    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan/10)"
-    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"str(quality)++"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"/10"
+    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)
+    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)"
+    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"*"+str(TMQ)
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
@@ -191,6 +224,10 @@ def single_odt(path, uname, create, table) :
             print "XS(total money)="+str(XS)
         print "TS="+str(TS)
 
+        assert TS != 0
+        assert XS != 0
+
+        print "score = (%s/%s)/(%s/%s)" % (str(all_as_code), str(TS), str(money), str(XS))
         score = (all_as_code / TS) / (money / XS)
 
         cell(tr, all_as_code)               # all as score
@@ -199,16 +236,23 @@ def single_odt(path, uname, create, table) :
             cell(tr, money)                 # money
             cell(tr, (money / XS))          # money score
         cell(tr, score)
-    
+
+def get_file_path(name):
+    global REVIEW
+    return REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") + "/" + name + ".odt"
+
 def all_odt(table, create) :
-    global RESULTMSG
-    uname_list = get_uname_list()
-    for uname in uname_list:
-        fpath = REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") + "/" + uname + ".odt"
-        if not os.path.isfile(fpath):
-            RESULTMSG += "[WARNING] " + uname + ".odt is not exist.\n"
+    global UDATA
+    print "[all_odt] review path is %s" % REVIEW
+    #for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
+    #    for fn in files:
+    #        single_odt(root+"/"+fn, get_name(fn), create, table)
+    for name in UDATA:
+        filepath = get_file_path(name)
+        if not os.path.isfile(filepath):
+            print "[all_odt] file %s not exist!" % filepath
             continue
-        single_odt(fpath, uname, create, table)
+        single_odt(filepath, name, create, table)
 
 def header(table) :
     global DEBUG
@@ -304,6 +348,7 @@ def main():
     table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
     
     # glue start
+    get_udata()
     get_total_money()
     header(table)
     all_odt(table, 0)
@@ -322,6 +367,13 @@ if __name__ == '__main__':
     TS = 0.0
     XS = 0.0#xxdebug
     DEBUG = 0
+    UDATA = {}
+
+    # team member quality
+    TMQ = 0.5
+    
+    # path
+    REVIEW = "/home/chenyang/mnt/share/Review"
     
     doc = OpenDocumentSpreadsheet()
     
