@@ -45,6 +45,12 @@ class parse_Tests(unittest.TestCase):
         log = "\nExpect : %s\nBut return %s" % (expect, nl)
         #self.assertTrue(nl == expect, msg = log)
 
+    def test3(self):
+        expect = [1566, 471, 388, 19, 2256, 2, 0, 0]
+        nl = parse_odt(TESTDIR+"/test3.odt")
+        log = "\nExpect : %s\nBut return %s" % (expect, nl)
+        self.assertTrue(nl == expect, msg = log)
+
 class calc_perf_Tests(unittest.TestCase):
     def test1(self):
         # config
