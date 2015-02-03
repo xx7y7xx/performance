@@ -70,7 +70,7 @@ if ( isset($_GET["action"]) && $_GET["action"] == "status" )
       <div class="jumbotron">
         <!--<h1>Navbar example</h1>-->
         <p>
-            <a id="gen-btn" class="btn btn-lg btn-primary" role="button">生成绩效报告</a>
+            <a id="gen-btn" class="btn btn-lg btn-danger" role="button">生成绩效报告</a>
         </p>
         <iframe id="result-win" src="./ods/?C=M;O=D" width="800" height="400">
         </iframe>
