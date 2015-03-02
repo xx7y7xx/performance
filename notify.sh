@@ -82,12 +82,3 @@ echo $cmd >> $CMDFILE
 cat $CMDFILE
 
 rcmdfile "$IP" "$CMDFILE"
-
-#
-# send mail notification
-#
-
-SUBJECT="${DATE}绩效统计"
-MSG="请将自己的绩效统计表格扔到\n\\\\192.168.2.21\\share\\Review\\`date +'%Y-%m'`"
-
-xsendmail "$SUBJECT" "$MSG" "glue@spolo.org,wanghongliang@spolo.org"
