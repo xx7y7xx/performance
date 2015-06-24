@@ -1,0 +1,7 @@
+trunk/art
+trunk/design
+trunk/doc
+trunk/jiandan001/public/exhibitions
+trunk/jiandan001/public/products
+trunk/product
+trunk/test/bug

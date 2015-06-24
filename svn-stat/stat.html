@@ -1,0 +1,85 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Glue Code Statu</title>
+		<link rel="stylesheet" href="/libs/dijit/themes/claro/claro.css" media="screen">
+		<script type="text/javascript" src="/libs/dojo/dojo.js" ></script>
+		<style type="text/css">
+			html, body {	
+				height: 100%;	margin: 0;	overflow: hidden;padding: 0;font-size:14px;	
+				font-family: "Georgia", Tahoma, Sans-Serif;line-height: 18px;color: #888;
+				
+			}
+			#_sp_main_container {
+				height: 100%;	padding:0px;
+			}
+			#divAuthors{
+				width:200px; border:none; padding:0px;margin-bottom:150px;
+				}
+			#divContent{margin-bottom:100px;}
+			.author{ margin:0px auto; height:20px; border-bottom:1px solid #efefef; 
+				cursor:pointer; margin-top:5px; padding:5px 0px 0px 20px; 
+			}
+			.log{width: 30px; height:13px; float:left; padding:5px; }
+			#divInvalidRevision{	width:100%;  float:left; padding:2px; /*background:#E5C2EB; */}			
+			#validRevision{	width:100%; float:left; padding:2px; /*background:#D1EBC2;*/ }
+			#count{	width:100%; float:left; padding:2px;  height:70px;}
+			 dt{float: left;width: 10em;margin: 0;text-align: right;}
+			 a:link {font-weight: bold;text-decoration: underline;color: #00c;}
+			 dd {margin: 0 0 2em 11em;}
+			.comment{margin: 0 0 1em;padding: 1em;color: #000;background-color: #eeeeee;}
+			.date {font-weight: normal;white-space: nowrap;}
+			.commitdetails {margin: 0;font-size: 85%;}
+			ul.commitdetails {	margin-top: 0.5em;}
+			strong, b {font-weight: bold;}
+			.commitdetails li {list-style-type: none;text-indent: -5em;}
+		</style>
+	</head>
+	
+	<body class = "claro">
+		<hr>
+		<div id="divDate" dojoType="dijit.layout.BorderContainer" design="sidebar" gutters="false">
+			<div id="divDateSelect">
+				<select id="selectYear" onchange="divMenuItemClick();">
+					<script>
+						var date = new Date();
+						var curYear = date.getFullYear();
+						for(var i=2011;i<2030;i++)
+						{
+							document.write("<option id=\""+i+"\" "+(i==curYear?'SELECTED':'')+">"+ i +"</option>");
+						}
+					</script>
+				</select>&nbsp;&nbsp;年&nbsp;&nbsp;
+				<select id="selectMonth" onchange="divMenuItemClick();">
+					<script>
+						var curMonth = date.getMonth()+1;
+						for(var i=1;i<13;i++)
+						{
+							document.write("<option id=\""+i+"\" "+(i==curMonth?'SELECTED':'')+">"+(i.toString().length==1?'0'+i:i)+"</option>");
+						}
+						var today = curYear +'-'+ curMonth +'-'+ date.getDate();
+
+					</script>
+				</select>&nbsp;&nbsp;月&nbsp;&nbsp;
+
+			</div>
+		</div>
+		<hr/>
+		<div id="_sp_main_container" dojoType="dijit.layout.BorderContainer" design="sidebar" gutters="false">
+			<div id="divAuthors" dojoType="dijit.layout.ContentPane" region="left">sdsd
+			</div>
+			<div id="divContent" dojoType="dijit.layout.ContentPane" region="center">
+			
+				<div id="count" ></div>
+				<div id="divInvalidRevision" style="float:left;"></div>
+				<div id="validRevision"  style="float:left;"></div>
+			</div>
+		</div>		
+		<div  dojoType="dijit.layout.BorderContainer" region="center" style="overflow:auto;height:768px;width:1024px;">
+		   <iframe id = "myFrame"  ></iframe>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="./stat.js"></script>

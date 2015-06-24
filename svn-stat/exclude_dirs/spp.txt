@@ -1,0 +1,4 @@
+trunk/test/bug
+trunk/thirdparty
+trunk/design
+trunk/doc
