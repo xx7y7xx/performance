@@ -75,7 +75,8 @@ stat_repo "glue"
 date
 
 # svn stat website
-cp "$WORKSPACE"/svn-stat/www/* ${OUTPUT}
+ls $WORKSPACE/svn-stat/www/*
+cp $WORKSPACE/svn-stat/www/* ${OUTPUT}
 
 # end time
 date
