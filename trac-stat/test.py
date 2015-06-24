@@ -25,6 +25,41 @@ import xxutils
 # test
 #
 
+class sub_code_block_Tests(unittest.TestCase):
+
+    def test1(self):
+        data = """abc
+        {{{def}}}
+        ghi"""
+        result = """abc
+        
+        ghi"""
+        self.assertTrue(xxutils.sub_code_block3(data) == result)
+    def test2(self):
+        text = "abc{{{def}}}ghi"
+        result = xxutils.sub_code_block3(text)
+        expect = "abcghi"
+        self.assertTrue(result == expect, msg='\ntext:[{0}]\nresult:[{1}], expect:[{2}]'.format(text, result, expect))
+    def test3(self):
+        text = r"""123
+{{{
+abc{{{def}}}ghi
+}}}
+456"""
+        result = xxutils.sub_code_block3(text)
+        expect = """123
+
+456"""
+        self.assertTrue(result == expect, msg='\ntext:[{0}]\nresult:[{1}], expect:[{2}]'.format(text, result, expect))
+    def test4(self):
+        text = r"""{{{
+abcdefghi
+}}}"""
+        result = xxutils.sub_code_block3(text)
+        expect = ""
+        self.assertTrue(result == expect, msg='\ntext:[{0}]\nresult:[{1}], expect:[{2}]'.format(text, result, expect))
+
+
 class wiki_differ_wc_Tests(unittest.TestCase):
 
     def test1(self):
@@ -154,8 +189,6 @@ class IsWikiSourcePage_Tests(unittest.TestCase):
         self.assertTrue(xxutils.IsWikiSourcePage("source/jiandan001/www/index.html"))
     def test2(self):
         self.assertTrue(xxutils.IsWikiSourcePage("jiandan001/www/index.html"))
-    def test3(self):
-        self.assertTrue(xxutils.IsWikiSourcePage("source/xuanran001/www/user-center/changshang/furniture.html"))
 
 class IsExcludeWiki_Tests(unittest.TestCase):
 
