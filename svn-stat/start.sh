@@ -28,7 +28,7 @@ stat_repo()
 	
   # Do a fresh checkout or update exist one.
   if [ -d $sr_svn_dir ]; then
-    svn update $sr_svn_dir
+    svn update $SVNPARAM $sr_svn_dir
   else
     svn checkout $SVNPARAM http://glue.spolo.org/svn/$sr_repo_name $sr_svn_dir
   fi
