@@ -2,10 +2,10 @@
 
 # Run this as a jenkins job
 
-# CI Env
-
+# Jenkins env
 #WORKSPACE="/var/lib/jenkins/jobs/svn-stat/workspace"
 
+# Script env
 SVNDIR="${WORKSPACE}/tmp/svn"
 STATSVN="${WORKSPACE}/opt/statsvn-0.7.0/statsvn.jar"
 OUTPUT="${WORKSPACE}/output"
