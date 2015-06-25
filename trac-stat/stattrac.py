@@ -15,7 +15,10 @@
 #**************************************************************************/
 
 import sys
-import argparse
+
+#import argparse  # new in python2.7
+import optparse   # old python
+
 from sqlite3 import dbapi2 as sqlite2
 
 import config
@@ -31,16 +34,30 @@ sys.setdefaultencoding('utf8')
 
 # 参数定义
 
-parser = argparse.ArgumentParser(description = "stattrac")
-parser.add_argument('--db', action='store', dest='trac_db',
+# new in python 2.7
+#parser = argparse.ArgumentParser(description = "stattrac")
+#parser.add_argument('--db', action='store', dest='trac_db',
+#                    help = "trac db path")
+#parser.add_argument('--url', action='store', dest='trac_url',
+#                    help = "trac url")
+#parser.add_argument('--out', action='store', dest='trac_out',
+#                    help = "trac output path")
+#parser.add_argument('--debug', action='store', dest='stattrac_debug',
+#                    help = "debug or not")
+#args = parser.parse_args()
+
+# old python
+parser = optparse.OptionParser()
+parser.add_option('--db', action='store', dest='trac_db',
                     help = "trac db path")
-parser.add_argument('--url', action='store', dest='trac_url',
+parser.add_option('--url', action='store', dest='trac_url',
                     help = "trac url")
-parser.add_argument('--out', action='store', dest='trac_out',
+parser.add_option('--out', action='store', dest='trac_out',
                     help = "trac output path")
-parser.add_argument('--debug', action='store', dest='stattrac_debug',
+parser.add_option('--debug', action='store', dest='stattrac_debug',
                     help = "debug or not")
 args = parser.parse_args()
+
 
 # 判断必须给定的参数
 
