@@ -232,15 +232,14 @@
 			var date = year + "-" + month;			 
 			var curr_month = myDate.getMonth() + 1; // getMonth (0~11)
             
-            if ( curr_month == month )
-            {
-                //http://192.168.2.21/statistics/svn/glue/commitlog.html
-    			iframe.src = "http://192.168.2.21/statistics/svn/glue/commitlog.html";
-			}
-			else
-			{
-			    iframe.src = "http://192.168.2.21/statistics/svn/glue/" + date + ".html";
-		    }
+      if ( curr_month == month )
+      {
+        iframe.src = "./glue/commitlog.html";
+      }
+      else
+      {
+        iframe.src = "./glue/" + date + ".html";
+      }
 		}		
 		
 		//去掉重复author
