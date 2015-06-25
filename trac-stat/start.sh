@@ -40,8 +40,8 @@ mkdir -p $TMP/${PROJ}/table
 # get db
 
 echo "Get db file from trac server..."
-ssh chenyang@${HOST} "cd /tmp ; cp /home/trac/${PROJ}/db/trac.db ./trac.db ; tar zcvf trac.db.tar.gz trac.db"
-scp -P 22 chenyang@${HOST}:/tmp/trac.db.tar.gz $TMP/${PROJ}
+ssh jenkins@${HOST} "cd /tmp ; cp /home/trac/${PROJ}/db/trac.db ./trac.db ; tar zcvf trac.db.tar.gz trac.db"
+scp -P 22 jenkins@${HOST}:/tmp/trac.db.tar.gz $TMP/${PROJ}
 tar zxvf $TMP/${PROJ}/trac.db.tar.gz -C $TMP/${PROJ}
 
 # begin
