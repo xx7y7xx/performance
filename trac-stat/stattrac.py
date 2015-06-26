@@ -45,6 +45,7 @@ sys.setdefaultencoding('utf8')
 #parser.add_argument('--debug', action='store', dest='stattrac_debug',
 #                    help = "debug or not")
 #args = parser.parse_args()
+#arglist = args
 
 # old python
 parser = optparse.OptionParser()
@@ -56,26 +57,27 @@ parser.add_option('--out', action='store', dest='trac_out',
                     help = "trac output path")
 parser.add_option('--debug', action='store', dest='stattrac_debug',
                     help = "debug or not")
-args = parser.parse_args()
+(options, args) = parser.parse_args()
+arglist = options
 
 
 # 判断必须给定的参数
 
-if args.trac_db is None :
+if arglist.trac_db is None :
     print "not given trac db."
     sys.exit()
-if args.trac_url is None :
+if arglist.trac_url is None :
     print "not given trac url."
     sys.exit()
-if args.trac_out is None :
+if arglist.trac_out is None :
     print "not given trac output path."
     sys.exit()
 
-config.TRAC_DB_PATH = args.trac_db
-config.TRAC_URL = args.trac_url
-config.TRAC_OUTPUT_PATH = args.trac_out
+config.TRAC_DB_PATH = arglist.trac_db
+config.TRAC_URL = arglist.trac_url
+config.TRAC_OUTPUT_PATH = arglist.trac_out
 # 是否进行debug
-if args.stattrac_debug is not None :
+if arglist.stattrac_debug is not None :
     config.DEBUG = True
 
 xxutils.sp_debug("Trac db path : " + config.TRAC_DB_PATH)
