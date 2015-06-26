@@ -32,10 +32,10 @@ rm -fv $TMP/${PROJ}/trac.db
 # init
 
 echo "Making new dir..."
-mkdir -p $TMP/${PROJ}/ticket
-mkdir -p $TMP/${PROJ}/wiki
-mkdir -p $TMP/${PROJ}/code
-mkdir -p $TMP/${PROJ}/table
+mkdir -p $OUTPUT/${PROJ}/ticket
+mkdir -p $OUTPUT/${PROJ}/wiki
+mkdir -p $OUTPUT/${PROJ}/code
+mkdir -p $OUTPUT/${PROJ}/table
 
 # get db
 
