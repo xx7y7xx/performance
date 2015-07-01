@@ -10,10 +10,15 @@ Reference
 
 ## setup
 
-1. download https://pypi.python.org/pypi/odfpy
+1. Download https://pypi.python.org/pypi/odfpy
  - or use this archive in repo [odfpy-0.9.6.tar.gz]
-2. build and install
+2. Build and install
 ```
 python setup.py build
 sudo python setup.py install
+```
+3. Test in python
+```
+python
+from odf.opendocument import load
 ```
