@@ -1,0 +1,367 @@
+<?php
+
+// basic page url usercenter/xingzheng/renyuanguanli.html
+
+if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
+{
+  drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+  
+  //
+  // These params are jqgrid adapter for backend.
+  // 
+
+  // xpath
+  $expr = $_GET["xpath"];
+
+  $url = "http://admin:admin@127.0.0.1:8080";
+
+  if ( isset( $_GET["sidx"] ) && $_GET["sidx"] != "" )
+  {
+    $expr .= " order by @" . $_GET["sidx"];
+    // desc to descending
+    if ( isset( $_GET["sord"] ) && $_GET["sord"] != "" )
+    {
+      $expr .= " " . $_GET["sord"] . "ending";
+    }
+  }
+
+  $expr = urlencode($expr);
+  $url .= "/sysop.api.query?xpath=$expr";
+
+  // rows(limit) is optional
+  if ( isset( $_GET["rows"] ) && $_GET["rows"] != "" )
+  {
+    $limit = $_GET["rows"];
+    $url .= "&limit=$limit";
+  }
+
+  // page is optional
+  if ( isset( $_GET["page"] ) && $_GET["page"] != "" )
+  {
+    $page = $_GET["page"];
+    $offset = ( $page - 1 ) * $limit;
+    $url .= "&offset=$offset";
+  }
+  else
+  {
+    $page = 1;
+  }
+
+  // send request to sling
+  $options = array(
+    "headers" => array("Content-Type" => "application/x-www-form-urlencoded"),
+    "method" => "GET",
+    "timeout" => 600
+  );
+
+  $result = drupal_http_request($url, $options);
+  $data = json_decode($result->data);
+
+  $total_page = $data->count / $limit;
+
+/*
+ * jqGrid expects the following default format for JSON data.
+{ 
+  "total": "xxx", 
+  "page": "yyy", 
+  "records": "zzz",
+  "rows" : [
+    {"id" :"1", "cell" :["cell11", "cell12", "cell13"]},
+    {"id" :"2", "cell":["cell21", "cell22", "cell23"]},
+      ...
+  ]
+}
+*/
+/*
+  $rows = array();
+  foreach ( $data->rows as $key => $val )
+  {
+    $row = new stdClass();
+    $row->id = $val->__node_uuid__;
+    $cell = array();
+    foreach ( $val as $k => $v )
+    {
+      $cell[] = $v;
+    }
+  }
+*/
+
+  foreach ( $data->rows as $key => $val )
+  {
+    if ( $val->{"oa_test"} )
+    {
+      $data->rows[$key]->{"oa_test"} = (string)((int)$val->{"oa_test"} / 12345678);
+    }
+    else
+    {
+      $data->rows[$key]->{"oa_test"} = 0;
+    }
+  }
+
+  $response = array(
+    "total"      => $total_page,   // total pages for the query
+    "page"       => $page,         // current page of the query
+    "records"    => $data->count,  // total number of records for the query
+    "rows"       => $data->rows,   // an array that contains the actual data
+    "status"     => 0,
+    "message"    => "ok",
+    "BackendURL" => $url
+  );
+
+  // result json
+  print json_encode($response);
+  exit();
+}
+else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
+{
+  drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+  switch($_POST["oper"])
+  {
+    case "add":
+    case "edit":
+      $nodename      = $_POST['id'];
+      $nickname      = $_POST['nickname'];
+      $telephone     = $_POST['telephone'];
+      $oa_department = $_POST['oa_department'];
+      $oa_group      = $_POST['oa_group'];
+      $oa_state      = $_POST['oa_state'];
+      $oa_test       = $_POST['oa_test'];
+      $oa_test       = (string)((int)$oa_test * 12345678);
+
+      // send request to sling
+      $path = "/content/users/$nodename";
+      $post_data  = "_charset_=utf-8";
+      $post_data .= "&nickname=$nickname";
+      $post_data .= "&telephone=$telephone";
+      $post_data .= "&oa_department=$oa_department";
+      $post_data .= "&oa_group=$oa_group";
+      $post_data .= "&oa_state=$oa_state";
+      $post_data .= "&oa_test=$oa_test";
+      
+      $url = "http://admin:admin@127.0.0.1:8080".$path;
+      $options = array(
+        'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+        'method' => 'POST',
+        'data' => $post_data
+      );
+      $result = drupal_http_request($url, $options);
+
+      // result json
+      $response = array(
+        "status"     => 0,               // default is 0
+        "message"    => "ok",            // defualt is ok
+        "results"    => "$result->data",
+        "backendurl" => "$url [|] $post_data"
+      );
+      print json_encode($response);
+      break;
+    case "del":
+    default:
+      break;
+  }
+  exit;
+}
+else
+{
+  global $user;
+  $pageuri = $_SERVER["REQUEST_URI"];
+
+  // check login
+  if($user->uid == 0){
+    $options = array(
+      "query" => array(
+        "destination" => $pageuri
+    ));
+    drupal_goto("login.html", $options);
+  }
+
+  $umail = $user->mail;
+
+  if ( $umail != "chenyang@masols.com" )
+  {
+    xlog("$umail deny access $pageuri", "permission issue");
+    drupal_goto("404.html");
+  }
+}
+?>
+<!doctype html>
+<html>
+<head>
+<title>人员管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" media="screen" href="/libs/jquery-ui-1.11.2/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/libs/jqgrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/libs/jqgrid/plugins/ui.multiselect.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/libs/jqgrid/plugins/searchFilter.css" />
+<style>
+/* Grid cell */
+/*.ui-jqgrid tr.jqgrow td {
+  font-size: 0.8em;
+}*/
+/* Grid header */
+/*.ui-jqgrid-labels {
+  font-size: 0.8em;
+}*/
+</style>
+<script src="/libs/jquery-1.11.2/jquery-1.11.2.min.js"></script>
+<script src="/libs/jquery-ui-1.11.2/jquery-ui.min.js"></script>
+<script src="/libs/jqgrid/js/i18n/grid.locale-cn.js"></script>
+<script src="/libs/jqgrid/js/jquery.jqGrid.min.js"></script>
+<script src="/libs/mask.js"></script>
+<script src="/libs/xxutils.js"></script>
+<script src="/libs/doT.min.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+</head>
+<body>
+<table id="list"></table>
+<div id="pager"></div>
+<script>
+
+var HTML_GENERATE_TIME = <?php echo time(); ?>;
+
+// Global config
+$(function() {
+
+  // Disable cache.
+  $.ajaxSetup({ cache: false });
+
+  // Single ajax send not care about loading mask things.
+  $(document).bind("ajaxSend", function(){
+    Mask.createMask();
+    Mask.createWaiting();
+  }).bind("ajaxComplete", function(){
+    Mask.removeWaiting();
+    Mask.remove();
+  });
+
+});
+
+// cell value convert table.
+
+var state_table = {
+  "": "全部",
+  "zaizhi": "在职",
+  "lizhi": "离职",
+  "qingjia": "请假"
+};
+var department_table = {
+  "": "全部",
+  "yanfazhongxin": "研发中心",
+  "zhizuozhongxin": "制作中心"
+};
+var group_table = {
+  "": "全部",
+  "webfe": "web前端",
+  "webbe": "web后端",
+  "zhituyuan": "制图员",
+  "art": "美术",
+  "yanshou": "质检"
+};
+
+$(function() {
+  var xpath = encodeURIComponent("/jcr:root/content/users/* [@role='/content/userrole/chengxuyuan']");
+  var url = "/usercenter/xingzheng/renyuanguanli.html?xpath=" + xpath;
+
+  var grid = $("#list");
+
+  var jqgcfg = {
+    url: url,
+    editurl: "/usercenter/xingzheng/renyuanguanli.html",
+    datatype: "json",
+    jsonReader: {
+      id: "__node_name__",
+      repeatitems: false
+    }
+  };
+
+  $.extend(jqgcfg, {
+    colModel: [
+      { label: "邮箱", name: "userID", index: "userID", width: 300 },
+      { label: "姓名", name: "nickname", index: "nickname", width: 170,
+        editable: true
+      },
+      { label: "test", name: "oa_test", index: "oa_test", width: 170,
+        editable: true
+      },
+      { label: "电话", name: "telephone", index: "telephone", width: 170, editable: true },
+      { label: "部门", name: "oa_department", index: "oa_department", width: 170,
+        formatter: yuangong_department,
+        editable: true, edittype: "select", editoptions: {
+          value: department_table
+        },
+        stype: "select", searchoptions: {
+          value: department_table
+        }
+      },
+      { label: "小组", name: "oa_group", index: "oa_group", width: 170,
+        formatter: yuangong_group,
+        editable: true, edittype: "select", editoptions: {
+          value: group_table
+        },
+        stype: "select", searchoptions: {
+          value: group_table
+        }
+      },
+      { label: "状态", name: "oa_state", index: "oa_state", width: 170,
+        formatter: yuangong_state,
+        editable: true, edittype: "select", editoptions: {
+          value: state_table
+        },
+        stype: "select", searchoptions: {
+          value: state_table
+        }
+      }
+    ],
+    rowNum: 30,
+    rowList: [10, 20, 50, 100, 200],
+    pager: "#pager",
+    sortname: "userID",
+    sortorder: "asc",
+    ignoreCase: true, // local search
+    viewrecords: true,
+    caption: "人员管理",
+    autowidth: true,
+    height: "auto",
+    loadComplete: function(data) { },
+    onPaging : function(which_button) { }
+  });
+  grid.jqGrid( jqgcfg );
+  grid.jqGrid("navGrid", "#pager", {
+    "add": false,
+    "edit": true,
+    "del": false
+  }, {}, {}, {}, {
+    "multipleSearch": true,
+    "multipleGroup": true
+  });
+  grid.jqGrid("filterToolbar", {
+    "defaultSearch": "cn",
+    "stringResult": true
+  });
+
+});
+
+// jqgrid formatter
+
+function yuangong_state ( cellvalue, options, rowObject )
+{
+  return state_table[cellvalue] || cellvalue || "";
+}
+
+function yuangong_department ( cellvalue, options, rowObject )
+{
+
+  return department_table[cellvalue] || cellvalue || "";
+}
+
+function yuangong_group ( cellvalue, options, rowObject )
+{
+  return group_table[cellvalue] || cellvalue || "";
+}
+
+</script>
+</body>
+</html>
+<?php
+exit();
+?>
