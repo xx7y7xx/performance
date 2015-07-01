@@ -88,13 +88,13 @@ if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
 
   foreach ( $data->rows as $key => $val )
   {
-    if ( $val->{"oa_test"} )
+    if ( $val->{"jcr:creat"} )
     {
-      $data->rows[$key]->{"oa_test"} = (string)((int)$val->{"oa_test"} / 12345678);
+      $data->rows[$key]->{"jcr:creat"} = (string)(((int)$val->{"jcr:creat"}-20140000000)/99);
     }
     else
     {
-      $data->rows[$key]->{"oa_test"} = 0;
+      $data->rows[$key]->{"jcr:creat"} = 0;
     }
   }
 
@@ -125,8 +125,8 @@ else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
       $oa_department = $_POST['oa_department'];
       $oa_group      = $_POST['oa_group'];
       $oa_state      = $_POST['oa_state'];
-      $oa_test       = $_POST['oa_test'];
-      $oa_test       = (string)((int)$oa_test * 12345678);
+      $jcr_creat     = $_POST['jcr:creat'];
+      $jcr_creat     = (string)((int)$jcr_creat*99+20140000000);
 
       // send request to sling
       $path = "/content/users/$nodename";
@@ -136,7 +136,7 @@ else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
       $post_data .= "&oa_department=$oa_department";
       $post_data .= "&oa_group=$oa_group";
       $post_data .= "&oa_state=$oa_state";
-      $post_data .= "&oa_test=$oa_test";
+      $post_data .= "&jcr:creat=$jcr_creat";
       
       $url = "http://admin:admin@127.0.0.1:8080".$path;
       $options = array(
@@ -210,7 +210,6 @@ else
 <script src="/libs/mask.js"></script>
 <script src="/libs/xxutils.js"></script>
 <script src="/libs/doT.min.js"></script>
-<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
 </head>
 <body>
 <table id="list"></table>
@@ -280,7 +279,7 @@ $(function() {
       { label: "姓名", name: "nickname", index: "nickname", width: 170,
         editable: true
       },
-      { label: "test", name: "oa_test", index: "oa_test", width: 170,
+      { label: "test", name: "jcr:creat", index: "jcr:creat", width: 170,
         editable: true
       },
       { label: "电话", name: "telephone", index: "telephone", width: 170, editable: true },
