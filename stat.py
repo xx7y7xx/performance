@@ -14,6 +14,8 @@
 # *
 #**************************************************************************/
 
+# Make sure change to current dir of this script, and then run it.
+
 import os
 from odf.opendocument import load
 from odf import text
@@ -359,21 +361,29 @@ def footer(table) :
 
 def main():
 
-    # Start the table, and describe the columns
-    table = Table(name="jixiao")
-    table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
-    
-    # glue start
-    get_udata()
-    get_total_creat()
-    header(table)
-    all_odt(table, 0)
-    all_odt(table, 1)
-    footer(table)
-    # glue end
-    
-    doc.spreadsheet.addElement(table)
-    doc.save(str(getDate().year) + getDate().strftime("%m"), True) # *.ods
+  # Start the table, and describe the columns
+  table = Table(name="jixiao")
+  table.addElement(TableColumn(numbercolumnsrepeated=16,stylename=widthwide))
+  
+  # glue start
+  get_udata()
+  get_total_creat()
+  header(table)
+  all_odt(table, 0)
+  all_odt(table, 1)
+  footer(table)
+  # glue end
+  
+  doc.spreadsheet.addElement(table)
+
+  # save to file
+
+  if not os.path.isdir("output"):
+    os.makedirs("output")
+
+  # output/2015-06
+  ods_path = "output/%s-%s" % ( str(getDate().year), getDate().strftime("%m") )
+  doc.save(ods_path, True) # odfpy auto add file prefix *.ods
 
 
 if __name__ == '__main__':
