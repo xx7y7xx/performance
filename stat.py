@@ -388,6 +388,8 @@ if __name__ == '__main__':
     
     # path
     REVIEW = "/home/chenyang/Mount/share/glue/review"
+    if not os.path.isdir(REVIEW):
+      REVIEW = "/mnt/share/art2/glue/review"
     
     doc = OpenDocumentSpreadsheet()
     
