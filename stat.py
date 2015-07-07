@@ -25,18 +25,18 @@ from odf.style import TableRowProperties
 from odf.text import P
 from odf.table import Table, TableColumn, TableRow, TableCell
 
+import urllib2
+from urllib2 import urlopen
+import socket
+
+import json
+
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 from xxutils import getDate
 from xxutils import get_name
-
-
-#cfg.py - https://docs.google.com/a/masols.com/document/d/1ge9HjJJ6Rfb-QjLZrZM5pOwWoWjZ5Wf-MgH0jqtMHwU/edit
-#from cfg import REVIEW
-#from cfg import UDATA
-#from cfg import TMQ
 
 def valuetype(val):
     valuetype="string"
@@ -80,40 +80,69 @@ def get_num(para) :
     else :
         return int(num)
 
-def get_total_money() :
+def get_total_creat() :
     global XS
     global UDATA
     global DEBUG
     for n,d in UDATA.items() :
         if DEBUG is 1 : 
-            print "[get_total_money] name : '"+n+"'"
-            print "[get_total_money] money : '"+str(d['qian'])+"'"
-        XS += d['qian']
+            print "[get_total_creat] name : '"+n+"'"
+            print "[get_total_creat] creat : '"+str(d['creat'])+"'"
+        XS += d['creat']
 
 def get_udata():
-    global UDATA
+  global UDATA
 
-    UDATA = {}
+  UDATA = {}
 
-    import sqlite3 as lite
-    con = lite.connect("jixiao.db")
+  url = "http://www.xuanran001.com/usercenter/xingzheng/renyuanguanli.html?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F*%20%5B%40role%3D%27%2Fcontent%2Fuserrole%2Fchengxuyuan%27%5D&_search=false&nd=1435736568370&rows=30&page=1&sidx=userID&sord=asc&_=1435736568143"
+  try:
+    response = urlopen(url, timeout = 30)
+  except urllib2.HTTPError as e:
+    msg = "URL : %s\n" % url
+    msg += 'Server return code : %s' % e.code
+    print(msg)
+  except urllib2.URLError as e:
+    print(('Unexpected exception thrown:', e.args))
+  except socket.timeout as e:
+    print(('Server timeout:', e.args))
 
-    with con:
+  raw_data = response.read().decode('utf-8')
+  json_obj = json.loads(raw_data)
+  rows = json_obj["rows"]
+  for row in rows:
+    name = row["userID"].split("@")[0]
+    UDATA[name] = {}
 
-        cur = con.cursor()
-        cur.execute("SELECT * FROM user4")
+    print("userID=%s", name)
 
-        rows = cur.fetchall()
+    if "jcr:creat" in row:
+      UDATA[name]["creat"] = (int(row["jcr:creat"])-20140000000)/99
+    else:
+      UDATA[name]["creat"] = 0
+      print("'jcr:creat' property is missing in this node")
 
-        for row in rows:
-            name = row[1]
-            UDATA[row[1]] = {}
-            UDATA[row[1]]["qian"] = row[2]
-            UDATA[row[1]]["3m"] = row[3]
-            UDATA[row[1]]["quality"] = row[4]
-            print "[get_udata] %s : %s : %s : %s" % ( name, row[2], row[3], row[4] )
+    if "oa_3m" in row:
+      UDATA[name]["3m"] = int(row["oa_3m"])
+    else:
+      UDATA[name]["3m"] = 0
+      print("'oa_3m' property is missing in this node")
 
-    print UDATA
+    if "oa_department" in row:
+      UDATA[name]["department"] = row["oa_department"]
+    else:
+      UDATA[name]["department"] = "webfe"
+      print("'oa_department' property is missing in this node")
+
+    if "oa_quality" in row:
+      UDATA[name]["quality"] = int(row["oa_quality"])
+    else:
+      UDATA[name]["quality"] = 0.5
+      print("'quality' property is missing in this node")
+
+    print("[get_udata] %s : %i : %i : %s : %i" % ( name, UDATA[name]["creat"], UDATA[name]["3m"], UDATA[name]["department"], UDATA[name]["quality"] ))
+
+  print UDATA
 
 def cell(tr, val, style = None) :
     print "[cell] type=%s" % str(type(val))
@@ -136,7 +165,7 @@ def single_odt(path, uname, create, table) :
     print "[single_odt] stat " + uname
 
     is_3m = UDATA[uname]['3m']
-    money = UDATA[uname]['qian']
+    creat = UDATA[uname]['creat']
     quality = UDATA[uname]['quality']
     print "[single_odt] quality of " + uname + " is " + str(quality)
 
@@ -207,21 +236,21 @@ def single_odt(path, uname, create, table) :
     
     if create == 1 :
         if DEBUG is 1 :
-            print "money="+str(money)
-            print "XS(total money)="+str(XS)
+            print "creat="+str(creat)
+            print "XS(total creat)="+str(XS)
         print "TS="+str(TS)
 
         assert TS != 0
         assert XS != 0
 
-        print "score = (%s/%s)/(%s/%s)" % (str(all_as_code), str(TS), str(money), str(XS))
-        score = (all_as_code / TS) / (money / XS)
+        print "score = (%s/%s)/(%s/%s)" % (str(all_as_code), str(TS), str(creat), str(XS))
+        score = (all_as_code / TS) / (creat / XS)
 
         cell(tr, all_as_code)               # all as score
         cell(tr, (all_as_code / TS))        # code score
         if DEBUG != 0 :
-            cell(tr, money)                 # money
-            cell(tr, (money / XS))          # money score
+            cell(tr, creat)                 # creat
+            cell(tr, (creat / XS))          # creat score
         cell(tr, score)
 
 def get_file_path(name):
@@ -275,8 +304,8 @@ def header(table) :
     cell(tr, "绝对贡献", tableheader)
     cell(tr, "贡献占比", tableheader)
     if DEBUG != 0 :
-        cell(tr, "money", tableheader)
-        cell(tr, "money score", tableheader)
+        cell(tr, "creat", tableheader)
+        cell(tr, "creat score", tableheader)
     cell(tr, "绩效系数", tableheader)
 
     cell(tr, "结果", tableheader)
@@ -336,7 +365,7 @@ def main():
     
     # glue start
     get_udata()
-    get_total_money()
+    get_total_creat()
     header(table)
     all_odt(table, 0)
     all_odt(table, 1)
@@ -358,7 +387,7 @@ if __name__ == '__main__':
     TMQ = 0.5
     
     # path
-    REVIEW = "/home/chenyang/mnt/share/Review"
+    REVIEW = "/home/chenyang/Mount/share/glue/review"
     
     doc = OpenDocumentSpreadsheet()
     
