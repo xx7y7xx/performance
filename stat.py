@@ -97,7 +97,10 @@ def get_udata():
 
   UDATA = {}
 
-  url = "http://www.xuanran001.com/usercenter/xingzheng/renyuanguanli.html?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F*%20%5B%40role%3D%27%2Fcontent%2Fuserrole%2Fchengxuyuan%27%5D&_search=false&nd=1435736568370&rows=30&page=1&sidx=userID&sord=asc&_=1435736568143"
+  import random
+  url = "http://www.xuanran001.com/usercenter/xingzheng/renyuanguanli.html?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F*%20%5B%40role%3D%27%2Fcontent%2Fuserrole%2Fchengxuyuan%27%5D&rows=30&_=" + str(random.randint(1, 1000000))
+  print("url: %s" % url)
+
   try:
     response = urlopen(url, timeout = 30)
   except urllib2.HTTPError as e:
@@ -116,7 +119,7 @@ def get_udata():
     name = row["userID"].split("@")[0]
     UDATA[name] = {}
 
-    print("userID=%s", name)
+    print("userID=%s" % name)
 
     if "jcr:creat" in row:
       UDATA[name]["creat"] = (int(row["jcr:creat"])-20140000000)/99
@@ -136,13 +139,13 @@ def get_udata():
       "gh3d"  : 1
     }
 
-    if "oa_department" in row:
-      UDATA[name]["quality"] = code_quality_map[row["oa_department"]]
+    if "oa_group" in row:
+      UDATA[name]["quality"] = code_quality_map[row["oa_group"]]
     else:
       UDATA[name]["quality"] = code_quality_map["webfe"]
-      print("'oa_department' property is missing in this node")
+      print("'oa_group' property is missing in this node")
 
-    print("[get_udata] %s : %i : %i : %s : %i" % ( name, UDATA[name]["creat"], UDATA[name]["3m"], UDATA[name]["department"], UDATA[name]["quality"] ))
+    print("[get_udata] %s : %i : %i : %i" % ( name, UDATA[name]["creat"], UDATA[name]["3m"], UDATA[name]["quality"] ))
 
   print UDATA
 
