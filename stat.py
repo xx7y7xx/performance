@@ -130,17 +130,17 @@ def get_udata():
       UDATA[name]["3m"] = 0
       print("'oa_3m' property is missing in this node")
 
-    if "oa_department" in row:
-      UDATA[name]["department"] = row["oa_department"]
-    else:
-      UDATA[name]["department"] = "webfe"
-      print("'oa_department' property is missing in this node")
+    code_quality_map = {
+      "webfe" : 0.5,
+      "webbe" : 1,
+      "gh3d"  : 1
+    }
 
-    if "oa_quality" in row:
-      UDATA[name]["quality"] = int(row["oa_quality"])
+    if "oa_department" in row:
+      UDATA[name]["quality"] = code_quality_map[row["oa_department"]]
     else:
-      UDATA[name]["quality"] = 0.5
-      print("'quality' property is missing in this node")
+      UDATA[name]["quality"] = code_quality_map["webfe"]
+      print("'oa_department' property is missing in this node")
 
     print("[get_udata] %s : %i : %i : %s : %i" % ( name, UDATA[name]["creat"], UDATA[name]["3m"], UDATA[name]["department"], UDATA[name]["quality"] ))
 
