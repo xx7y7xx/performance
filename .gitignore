@@ -4,3 +4,4 @@
 *.db
 cfg.py
 stat.log
+output
