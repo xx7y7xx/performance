@@ -94,7 +94,7 @@ def get_total_creat() :
 
 def get_3m_data():
   global M3DATA
-  url = "192.168.0.61:8080/sysop.api.query?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F_chenyang_40masols.com%2Foa%2Fm3%2F%2A+order+by+%40month+descending&limit=30&offset=0"
+  url = "http://192.168.0.61:8080/sysop.api.query?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F_chenyang_40masols.com%2Foa%2Fm3%2F%2A+order+by+%40month+descending&limit=30&offset=0"
   print("url: %s" % url)
 
   try:
