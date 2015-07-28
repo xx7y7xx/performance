@@ -103,13 +103,13 @@ def get_3m_data():
     msg = "URL : %s\n" % url
     msg += 'Server return code : %s' % e.code
     print(msg)
-    sys.exit(0)
+    sys.exit(1)
   except urllib2.URLError as e:
     print(('Unexpected exception thrown:', e.args))
-    sys.exit(0)
+    sys.exit(2)
   except socket.timeout as e:
     print(('Server timeout:', e.args))
-    sys.exit(0)
+    sys.exit(3)
 
   raw_data = response.read().decode('utf-8')
   json_obj = json.loads(raw_data)
@@ -135,13 +135,13 @@ def get_udata():
     msg = "URL : %s\n" % url
     msg += 'Server return code : %s' % e.code
     print(msg)
-    sys.exit(0)
+    sys.exit(1)
   except urllib2.URLError as e:
     print(('Unexpected exception thrown:', e.args))
-    sys.exit(0)
+    sys.exit(2)
   except socket.timeout as e:
     print(('Server timeout:', e.args))
-    sys.exit(0)
+    sys.exit(3)
 
   raw_data = response.read().decode('utf-8')
   json_obj = json.loads(raw_data)
