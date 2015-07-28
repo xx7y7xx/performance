@@ -92,6 +92,34 @@ def get_total_creat() :
             print "[get_total_creat] creat : '"+str(d['creat'])+"'"
         XS += d['creat']
 
+def get_3m_data():
+  global M3DATA
+  url = "192.168.0.61:8080/sysop.api.query?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F_chenyang_40masols.com%2Foa%2Fm3%2F%2A+order+by+%40month+descending&limit=30&offset=0"
+  print("url: %s" % url)
+
+  try:
+    response = urlopen(url, timeout = 30)
+  except urllib2.HTTPError as e:
+    msg = "URL : %s\n" % url
+    msg += 'Server return code : %s' % e.code
+    print(msg)
+    sys.exit(0)
+  except urllib2.URLError as e:
+    print(('Unexpected exception thrown:', e.args))
+    sys.exit(0)
+  except socket.timeout as e:
+    print(('Server timeout:', e.args))
+    sys.exit(0)
+
+  raw_data = response.read().decode('utf-8')
+  json_obj = json.loads(raw_data)
+  rows = json_obj["rows"]
+  for row in rows:
+    # __node_name__ = 201507
+    if row["__node_name__"] != getDate().strftime("%Y%m")
+      continue
+    M3DATA = row["userlist"]
+
 def get_udata():
   global UDATA
 
@@ -130,12 +158,6 @@ def get_udata():
       UDATA[name]["creat"] = 0
       print("'jcr:creat' property is missing in this node")
 
-    if "oa_3m" in row:
-      UDATA[name]["3m"] = int(row["oa_3m"])
-    else:
-      UDATA[name]["3m"] = 0
-      print("'oa_3m' property is missing in this node")
-
     code_quality_map = {
       "webfe" : 0.5,
       "webbe" : 1,
@@ -148,7 +170,7 @@ def get_udata():
       UDATA[name]["quality"] = code_quality_map["webfe"]
       print("'oa_group' property is missing in this node")
 
-    print("[get_udata] %s : %i : %i : %i" % ( name, UDATA[name]["creat"], UDATA[name]["3m"], UDATA[name]["quality"] ))
+    print("[get_udata] %s : %i : %i" % ( name, UDATA[name]["creat"], UDATA[name]["quality"] ))
 
   print UDATA
 
@@ -169,10 +191,11 @@ def single_odt(path, uname, create, table) :
     global DEBUG
     global REVIEW
     global UDATA
+    global M3DATA
 
     print "[single_odt] stat " + uname
 
-    is_3m = UDATA[uname]['3m']
+    is_3m = uname in M3DATA
     creat = UDATA[uname]['creat']
     quality = UDATA[uname]['quality']
     print "[single_odt] quality of " + uname + " is " + str(quality)
@@ -263,12 +286,12 @@ def single_odt(path, uname, create, table) :
 
 def get_file_path(name):
     global REVIEW
-    return REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") + "/" + name + ".odt"
+    return REVIEW + "/" + getDate().strftime("%Y-%m") + "/" + name + ".odt"
 
 def all_odt(table, create) :
     global UDATA
     print "[all_odt] review path is %s" % REVIEW
-    #for root, dirs, files in os.walk( REVIEW + "/" + str(getDate().year) + "-" + getDate().strftime("%m") ):
+    #for root, dirs, files in os.walk( REVIEW + "/" + getDate().strftime("%Y-%m") ):
     #    for fn in files:
     #        single_odt(root+"/"+fn, get_name(fn), create, table)
     for name in UDATA:
@@ -290,7 +313,7 @@ def header(table) :
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
-    cell(tr, str(getDate().year) + "年 " + getDate().strftime("%m") + " 月 研发中心 绩效评估表", bigtitle)
+    cell(tr, getDate().strftime("%Y年 %m 月 ") + "研发中心 绩效评估表", bigtitle)
 
     # table header
 
@@ -373,6 +396,7 @@ def main():
   
   # glue start
   get_udata()
+  get_3m_data()
   get_total_creat()
   header(table)
   all_odt(table, 0)
@@ -388,7 +412,7 @@ def main():
     os.makedirs("output")
 
   # output/2015-06
-  ods_path = "output/%s-%s" % ( str(getDate().year), getDate().strftime("%m") )
+  ods_path = "output/%s" % getDate().strftime("%Y-%m")
   doc.save(ods_path, True) # odfpy auto add file prefix *.ods
 
 
