@@ -116,7 +116,7 @@ def get_3m_data():
   rows = json_obj["rows"]
   for row in rows:
     # __node_name__ = 201507
-    if row["__node_name__"] != getDate().strftime("%Y%m")
+    if row["__node_name__"] != getDate().strftime("%Y%m"):
       continue
     M3DATA = row["userlist"]
 
