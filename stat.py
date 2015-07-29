@@ -463,7 +463,7 @@ if __name__ == '__main__':
   #####################################################################
 
   # Using current month by defualt.
-  if aarglist.month is None :
+  if arglist.month is None :
     print "No [month] param, start create performance of this month"
     MONTH = getDate().strftime("%Y%m")
   else:
