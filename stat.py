@@ -120,11 +120,19 @@ def get_3m_data():
   raw_data = response.read().decode('utf-8')
   json_obj = json.loads(raw_data)
   rows = json_obj["rows"]
+
+  M3DATA = None
+
   for row in rows:
     # __node_name__ = 201507
     if row["__node_name__"] != MONTH:
       continue
     M3DATA = row["userlist"]
+
+  # We got data?
+  if M3DATA is None:
+    print "[get_3m_data] something is wrong when getting 3m month data."
+    sys.exit(2)
 
 def get_udata():
   global UDATA
