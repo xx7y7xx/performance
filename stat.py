@@ -213,6 +213,7 @@ def single_odt(path, uname, create, table) :
     creat = UDATA[uname]['creat']
     quality = UDATA[uname]['quality']
     print "[single_odt] quality of " + uname + " is " + str(quality)
+    print "[single_odt] 3m of " + uname + " is " + str(is_3m)
 
     print "[single_odt] path="+path
     doc = load(path)
@@ -227,6 +228,7 @@ def single_odt(path, uname, create, table) :
     
     contrib = []
 
+    # Loop every line in odt.
     idx = 0
     for para in doc.getElementsByType(text.P):
         
