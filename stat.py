@@ -17,6 +17,11 @@
 # Make sure change to current dir of this script, and then run it.
 
 import os
+import time
+
+#import argparse  # new in python2.7
+import optparse   # old python
+
 from odf.opendocument import load
 from odf import text
 
@@ -94,6 +99,7 @@ def get_total_creat() :
 
 def get_3m_data():
   global M3DATA
+  global MONTH
   url = "http://192.168.0.61:8080/sysop.api.query?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F_chenyang_40masols.com%2Foa%2Fm3%2F%2A+order+by+%40month+descending&limit=30&offset=0"
   print("url: %s" % url)
 
@@ -116,7 +122,7 @@ def get_3m_data():
   rows = json_obj["rows"]
   for row in rows:
     # __node_name__ = 201507
-    if row["__node_name__"] != getDate().strftime("%Y%m"):
+    if row["__node_name__"] != MONTH:
       continue
     M3DATA = row["userlist"]
 
@@ -286,12 +292,12 @@ def single_odt(path, uname, create, table) :
 
 def get_file_path(name):
     global REVIEW
-    return REVIEW + "/" + getDate().strftime("%Y-%m") + "/" + name + ".odt"
+    return REVIEW + "/" + MONTH + "/" + name + ".odt"
 
 def all_odt(table, create) :
     global UDATA
     print "[all_odt] review path is %s" % REVIEW
-    #for root, dirs, files in os.walk( REVIEW + "/" + getDate().strftime("%Y-%m") ):
+    #for root, dirs, files in os.walk( REVIEW + "/" + MONTH ):
     #    for fn in files:
     #        single_odt(root+"/"+fn, get_name(fn), create, table)
     for name in UDATA:
@@ -313,7 +319,7 @@ def header(table) :
     cell(tr, "")
     cell(tr, "")
     cell(tr, "")
-    cell(tr, getDate().strftime("%Y年 %m 月 ") + "研发中心 绩效评估表", bigtitle)
+    cell(tr, MONTH + "研发中心 绩效评估表", bigtitle)
 
     # table header
 
@@ -412,74 +418,113 @@ def main():
     os.makedirs("output")
 
   # output/2015-06
-  ods_path = "output/%s" % getDate().strftime("%Y-%m")
+  ods_path = "output/%s" % MONTH
   doc.save(ods_path, True) # odfpy auto add file prefix *.ods
 
 
 if __name__ == '__main__':
 
-    TS = 0.0
-    XS = 0.0#xxdebug
-    DEBUG = 0
-    UDATA = {}
+  # Global variable
 
-    # team member quality
-    TMQ = 0.5
-    
-    # path
-    REVIEW = "/home/chenyang/Mount/share/glue/review"
-    if not os.path.isdir(REVIEW):
-      REVIEW = "/mnt/share/art2/glue/review"
-    
-    doc = OpenDocumentSpreadsheet()
-    
-    # Create a style for the table content. One we can modify
-    # later in the word processor.
-    tablecontents = Style(name="Table Contents", family="paragraph")
-    tablecontents.addElement(ParagraphProperties(numberlines="false", linenumber="0"))
-    doc.styles.addElement(tablecontents)
-    
-    # Create automatic styles for the column widths.
-    # We want two different widths, one in inches, the other one in metric.
-    # ODF Standard section 15.9.1
-    widthwide = Style(name="Wwide", family="table-column")
-    widthwide.addElement(TableColumnProperties(columnwidth="1.0in"))
-    doc.automaticstyles.addElement(widthwide)
-    
-    # high height row
-    heighthigh = Style(name="Hhigh", family="table-row")
-    heighthigh.addElement(TableRowProperties(rowheight="1.2cm"))
-    doc.automaticstyles.addElement(heighthigh)
-    
-    # one big title
-    bigtitle = Style(name="Large title", family="table-cell")
-    bigtitle.addElement(
-        TextProperties(
-            fontfamily="WenQuanYi Micro Hei",
-            fontsize="15pt", fontsizeasian="15pt",
-            fontweight="bold", fontweightasian="bold"
-    ))
-    doc.styles.addElement(bigtitle)
-    
-    # style for table header
-    tableheader = Style(name="Table header", family="table-cell")
-    tableheader.addElement(
-        TextProperties(
-            fontweight="bold", fontweightasian="bold"
-    ))
-    doc.styles.addElement(tableheader)
-    
-    # style for table footer
-    tablefooter = Style(name="Large text", family="table-cell")
-    tablefooter.addElement(
-        TextProperties(
-            fontfamily="WenQuanYi Micro Hei",
-            fontsize="13pt", fontsizeasian="13pt",
-            fontweight="bold", fontweightasian="bold"
-    ))
-    tablefooter.addElement(ParagraphProperties(textalign="center"))
-    doc.styles.addElement(tablefooter)
-    
-    main()
+  MONTH = ""
+  TS = 0.0
+  XS = 0.0#xxdebug
+  DEBUG = 0
+  UDATA = {}
+
+  # team member quality
+  TMQ = 0.5
+  
+  # path
+  REVIEW = "/home/chenyang/Mount/share/glue/review"
+  if not os.path.isdir(REVIEW):
+    REVIEW = "/mnt/share/art2/glue/review"
+
+  #
+  # Command line options parsing
+  #
+
+  #####################################################################
+  # new in python 2.7
+  #####################################################################
+  #parser = argparse.ArgumentParser(description = "stat")
+  #parser.add_argument('--month', action='store', dest='month',
+  #                    help = "performance month, eg. 201507")
+  #args = parser.parse_args()
+  #arglist = args
+  #####################################################################
+  # old python
+  #####################################################################
+  parser = optparse.OptionParser()
+  parser.add_option('--month', action='store', dest='month',
+                      help = "performance month, eg. 201507")
+  (options, args) = parser.parse_args()
+  arglist = options
+  #####################################################################
+
+  # Using current month by defualt.
+  if aarglist.month is None :
+    print "No [month] param, start create performance of this month"
+    MONTH = getDate().strftime("%Y%m")
+  else:
+    MONTH = arglist.month
+
+  # Check time formate, 201507
+  try:
+    time.strptime(MONTH, "%Y%m")
+  except:
+    print "Time format error!"
+    sys.exit(2)
+
+  doc = OpenDocumentSpreadsheet()
+  
+  # Create a style for the table content. One we can modify
+  # later in the word processor.
+  tablecontents = Style(name="Table Contents", family="paragraph")
+  tablecontents.addElement(ParagraphProperties(numberlines="false", linenumber="0"))
+  doc.styles.addElement(tablecontents)
+  
+  # Create automatic styles for the column widths.
+  # We want two different widths, one in inches, the other one in metric.
+  # ODF Standard section 15.9.1
+  widthwide = Style(name="Wwide", family="table-column")
+  widthwide.addElement(TableColumnProperties(columnwidth="1.0in"))
+  doc.automaticstyles.addElement(widthwide)
+  
+  # high height row
+  heighthigh = Style(name="Hhigh", family="table-row")
+  heighthigh.addElement(TableRowProperties(rowheight="1.2cm"))
+  doc.automaticstyles.addElement(heighthigh)
+  
+  # one big title
+  bigtitle = Style(name="Large title", family="table-cell")
+  bigtitle.addElement(
+      TextProperties(
+          fontfamily="WenQuanYi Micro Hei",
+          fontsize="15pt", fontsizeasian="15pt",
+          fontweight="bold", fontweightasian="bold"
+  ))
+  doc.styles.addElement(bigtitle)
+  
+  # style for table header
+  tableheader = Style(name="Table header", family="table-cell")
+  tableheader.addElement(
+      TextProperties(
+          fontweight="bold", fontweightasian="bold"
+  ))
+  doc.styles.addElement(tableheader)
+  
+  # style for table footer
+  tablefooter = Style(name="Large text", family="table-cell")
+  tablefooter.addElement(
+      TextProperties(
+          fontfamily="WenQuanYi Micro Hei",
+          fontsize="13pt", fontsizeasian="13pt",
+          fontweight="bold", fontweightasian="bold"
+  ))
+  tablefooter.addElement(ParagraphProperties(textalign="center"))
+  doc.styles.addElement(tablefooter)
+  
+  main()
 
 #EOF
