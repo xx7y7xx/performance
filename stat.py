@@ -275,14 +275,29 @@ def single_odt(path, uname, create, table) :
         if idx == 7:
           contrib["zuyuan"] = num
         
-        if create == 1 :
-            # is 3month
-            if idx == 6 :
-                cell(tr, num*is_3m)
-            else :
-                cell(tr, num)
-        
         idx += 1
+
+    # Write number to table cell
+    #@FIXME cell function should accept column number param
+    if create == 1:
+      for idx in range(7):
+        if idx == 0:
+          cell(tr, contrib["self_ticket"])
+        if idx == 1:
+          cell(tr, contrib["other_ticket"])
+        if idx == 2:
+          cell(tr, contrib["wiki"])
+        if idx == 3:
+          cell(tr, contrib["wiki_code"])
+        if idx == 4:
+          cell(tr, contrib["daima"])
+        if idx == 5:
+          cell(tr, contrib["bug"])
+        # is 3month
+        if idx == 6:
+          cell(tr, contrib["xuqiu"] * is_3m)
+        if idx == 7:
+          cell(tr, contrib["zuyuan"])
     
     # every single contrib
     self_ticket = contrib["self_ticket"]
