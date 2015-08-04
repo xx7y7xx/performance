@@ -226,7 +226,16 @@ def single_odt(path, uname, create, table) :
         cell(tr, uname)
         cell(tr, quality)
     
-    contrib = []
+    contrib = {
+      "self_ticket": 0,
+      "other_ticket": 0,
+      "wiki": 0,
+      "wiki_code": 0,
+      "daima": 0,
+      "bug": 0,
+      "xuqiu": 0,
+      "zuyuan": 0
+    }
 
     # Loop every line in odt.
     idx = 0
@@ -243,13 +252,28 @@ def single_odt(path, uname, create, table) :
         print "[single_odt] idx='%s'" % str(idx)
         print "[single_odt] num='%s'" % str(num)
 
+        if idx == 0:
+          contrib["self_ticket"] = num
+        if idx == 1:
+          contrib["other_ticket"] = num
+        if idx == 2:
+          contrib["wiki"] = num
+        if idx == 3:
+          contrib["wiki_code"] = num
+        if idx == 4:
+          contrib["daima"] = num
         if idx == 5:
-            print "[single_odt] bug column"
-            # bug number not large than 100
-            #assert num < 100
-            if num >= 100:
-                print "[single_odt] bug number large than 100"
-                num = 0.0
+          print "[single_odt] bug column"
+          # bug number not large than 100
+          #assert num < 100
+          if num >= 100:
+            print "[single_odt] bug number large than 100"
+            num = 0.0
+          contrib["bug"] = num
+        if idx == 6:
+          contrib["xuqiu"] = num
+        if idx == 7:
+          contrib["zuyuan"] = num
         
         if create == 1 :
             # is 3month
@@ -258,20 +282,17 @@ def single_odt(path, uname, create, table) :
             else :
                 cell(tr, num)
         
-        # store contrib
-        contrib.append(num)
-        
         idx += 1
     
     # every single contrib
-    self_ticket = contrib[0]
-    other_ticket = contrib[1]
-    wiki = contrib[2]
-    wiki_code = contrib[3]
-    daima = contrib[4]
-    bug = contrib[5]
-    xuqiu = contrib[6]
-    zuyuan = contrib[7]
+    self_ticket = contrib["self_ticket"]
+    other_ticket = contrib["other_ticket"]
+    wiki = contrib["wiki"]
+    wiki_code = contrib["wiki_code"]
+    daima = contrib["daima"]
+    bug = contrib["bug"]
+    xuqiu = contrib["xuqiu"]
+    zuyuan = contrib["zuyuan"]
     
     all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)
     print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)"
