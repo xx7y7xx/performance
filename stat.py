@@ -227,14 +227,14 @@ def single_odt(path, uname, create, table) :
         cell(tr, quality)
     
     contrib = {
-      "self_ticket": 0,
-      "other_ticket": 0,
-      "wiki": 0,
-      "wiki_code": 0,
-      "daima": 0,
-      "bug": 0,
-      "xuqiu": 0,
-      "zuyuan": 0
+      "self_ticket": 0,   #0
+      "other_ticket": 0,  #1
+      "wiki": 0,          #2
+      "wiki_code": 0,     #3
+      "daima": 0,         #4
+      "bug": 0,           #5
+      "xuqiu": 0,         #6
+      "zuyuan": 0         #7
     }
 
     # Loop every line in odt.
@@ -280,7 +280,7 @@ def single_odt(path, uname, create, table) :
     # Write number to table cell
     #@FIXME cell function should accept column number param
     if create == 1:
-      for idx in range(7):
+      for idx in range(8):
         if idx == 0:
           cell(tr, contrib["self_ticket"])
         if idx == 1:
