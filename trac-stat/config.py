@@ -22,6 +22,7 @@ SPP_USERS = (
     "cuiqiang",
     "dinghuihui",
     "fengmingming",
+    "gaohongtao",
     "lilixiang",
     "liuliang",
     "liyingying",
