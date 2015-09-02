@@ -97,9 +97,8 @@ def get_total_creat() :
             print "[get_total_creat] creat : '"+str(d['creat'])+"'"
         XS += d['creat']
 
-def get_3m_data():
+def get_3m_data(month):
   global M3DATA
-  global MONTH
   url = "http://192.168.0.61:8080/sysop.api.query?xpath=%2Fjcr%3Aroot%2Fcontent%2Fusers%2F_chenyang_40masols.com%2Foa%2Fm3%2F%2A+order+by+%40month+descending&limit=30&offset=0"
   print("url: %s" % url)
 
@@ -125,14 +124,16 @@ def get_3m_data():
 
   for row in rows:
     # __node_name__ = 201507
-    if row["__node_name__"] != MONTH:
+    if row["__node_name__"] != month:
       continue
     M3DATA = row["userlist"]
 
   # We got data?
   if M3DATA is None:
     print "[get_3m_data] something is wrong when getting 3m month data."
-    sys.exit(2)
+    M3DATA = []
+
+  return M3DATA
 
 def get_udata():
   global UDATA
@@ -440,7 +441,7 @@ def footer(table) :
 # main
 #
 
-def main():
+def main(month):
 
   # Start the table, and describe the columns
   table = Table(name="jixiao")
@@ -448,7 +449,7 @@ def main():
   
   # glue start
   get_udata()
-  get_3m_data()
+  get_3m_data(month)
   get_total_creat()
   header(table)
   all_odt(table, 0)
@@ -464,7 +465,7 @@ def main():
     os.makedirs("output")
 
   # output/2015-06
-  ods_path = "output/%s" % MONTH
+  ods_path = "output/%s" % month
   doc.save(ods_path, True) # odfpy auto add file prefix *.ods
 
 
@@ -571,6 +572,6 @@ if __name__ == '__main__':
   tablefooter.addElement(ParagraphProperties(textalign="center"))
   doc.styles.addElement(tablefooter)
   
-  main()
+  main(MONTH)
 
 #EOF
