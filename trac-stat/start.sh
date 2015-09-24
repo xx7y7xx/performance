@@ -26,12 +26,12 @@ echo "Trac Statistics - ${HOST}"
 # Clean
 
 echo "Remove old sqlite db..."
-rm -fv $TMP/${PROJ}/trac.db.tar.gz
-rm -fv $TMP/${PROJ}/trac.db
+rm -fv $TMP/${PROJ}
 
 # init
 
 echo "Making new dir..."
+mkdir -p $TMP/${PROJ}
 mkdir -p $OUTPUT/${PROJ}/ticket
 mkdir -p $OUTPUT/${PROJ}/wiki
 mkdir -p $OUTPUT/${PROJ}/code
@@ -49,8 +49,8 @@ tar zxvf $TMP/${PROJ}/trac.db.tar.gz -C $TMP/${PROJ}
 echo "Begin to parse db file..."
 python $STATTRAC --url="http://${PROJ}.spolo.org/trac/${PROJ}" --db="${TMP}/${PROJ}/trac.db" --out="${OUTPUT}/${PROJ}" #--debug=chenyang
 if [ $? -ne 0 ]; then
-	echo "[ERROR] Python run error!"
-	exit 1
+        echo "[ERROR] Python run error!"
+        exit 1
 fi
 
 #EOF
