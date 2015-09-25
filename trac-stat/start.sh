@@ -26,7 +26,7 @@ echo "Trac Statistics - ${HOST}"
 # Clean
 
 echo "Remove old sqlite db..."
-rm -fv $TMP/${PROJ}
+rm -rfv $TMP/${PROJ}
 
 # init
 
