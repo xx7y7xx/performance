@@ -2,3 +2,4 @@
 - 三个月加成的标志位和user list拆分开。
 - user list从wiki获取。
 - 薪资和user list拆分开。
+- Add unittest for user list in trac(http://glue.spolo.org/trac/glue/wiki/%E5%BC%80%E5%8F%91%E4%BA%BA%E5%91%98%E4%BF%A1%E6%81%AF) and user list in jcr (role=chengxuyuan)
