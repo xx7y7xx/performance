@@ -107,7 +107,7 @@ def GetAllUsersInTrac(all_tickets) :
     # 忽略一些用户，比如离职。
     if ticket["reporter"] not in users_list :
       users_list.append(ticket["reporter"])
-    if ticket["owner"] not in users_list :
+    if ticket["owner"] and ticket["owner"] not in users_list :
       users_list.append(ticket["owner"])
     
     # 处理回帖的用户，因为有些用户可能只回帖不创建帖子。
