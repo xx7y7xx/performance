@@ -97,24 +97,25 @@ def GetAllUsersInTrac(all_tickets) :
     all_tickets: 
 
   Returns:
-    A list of users
+    A list of string of user name.
 
   Raises:
     ??
   """
   users_list = []
   for ticket_id, ticket in all_tickets.iteritems() :
-    # 忽略一些用户，比如离职。
-    if ticket["reporter"] not in users_list :
-      users_list.append(ticket["reporter"])
-    if ticket["owner"] and ticket["owner"] not in users_list :
-      users_list.append(ticket["owner"])
+    reporter = str(ticket["reporter"])
+    owner = str(ticket["owner"])
+    if reporter not in users_list :
+      users_list.append(reporter)
+    if owner and owner not in users_list :
+      users_list.append(owner)
     
     # 处理回帖的用户，因为有些用户可能只回帖不创建帖子。
     for comment_id, comment in ticket["comment"].iteritems() :
-      # 忽略一些用户，比如离职。
-      if comment["author"] not in users_list :
-        users_list.append(comment["author"])
+      author = str(comment["author"])
+      if author not in users_list :
+        users_list.append(author)
   
   return users_list
 
