@@ -43,6 +43,8 @@ echo "Get db file from trac server..."
 ssh chenyang@${HOST} "cd /tmp ; cp /home/trac/${PROJ}/db/trac.db ./trac.db ; tar zcvf trac.db.tar.gz trac.db"
 scp -P 22 chenyang@${HOST}:/tmp/trac.db.tar.gz $TMP/${PROJ}
 tar zxvf $TMP/${PROJ}/trac.db.tar.gz -C $TMP/${PROJ}
+# DEBUG ONLY: Show file size.
+ls -lh $TMP/${PROJ}
 
 # begin
 
