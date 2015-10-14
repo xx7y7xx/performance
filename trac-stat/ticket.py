@@ -84,31 +84,41 @@ def AddItem2Comment(comment, item) :
 	
 	return comment
 
-##
-# @brief分别遍历所有ticket和所有comment从而形成一个用户列表。
-# 只要用户出现在如下情况中，那么本函数就会将这个人（someone）记录在列表中。
-# * owner = someone
-# * reporter = someone
-# * author = someone （回复别人的帖子的时候，那个回帖的人叫做author）
-##
 def GetAllUsersInTrac(all_tickets) :
+  """分别遍历所有ticket和所有comment从而形成一个用户列表。
+
+  Not "ALL" tickets, but tickets in selected month.
+  只要用户出现在如下情况中，那么本函数就会将这个人（someone）记录在列表中。
+  * owner = someone
+  * reporter = someone
+  * author = someone （回复别人的帖子的时候，那个回帖的人叫做author）
+
+  Args:
+    all_tickets: 
+
+  Returns:
+    A list of users
+
+  Raises:
+    ??
+  """
 	users_list = []
 	for ticket_id, ticket in all_tickets.iteritems() :
 		# 忽略一些用户，比如离职。
-		if ticket["reporter"] in config.SPP_USERS and ticket["reporter"] not in users_list :
+		if ticket["reporter"] not in users_list :
 			users_list.append(ticket["reporter"])
-		if ticket["owner"] in config.SPP_USERS and ticket["owner"] not in users_list :
+		if ticket["owner"] not in users_list :
 			users_list.append(ticket["owner"])
 		
 		# 处理回帖的用户，因为有些用户可能只回帖不创建帖子。
 		for comment_id, comment in ticket["comment"].iteritems() :
 			# 忽略一些用户，比如离职。
-			if comment["author"] in config.SPP_USERS and comment["author"] not in users_list :
+			if comment["author"] not in users_list :
 				users_list.append(comment["author"])
 	
 	return users_list
 
-###
+##
 # @brief Get all tickets (w/o comment) in ONE month.
 ##
 def GetTicketStatByMonth(conn, year, month):

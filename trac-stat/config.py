@@ -14,34 +14,6 @@
 # *
 #**************************************************************************/
 
-# 只列出在职人员，忽略一些用户，比如离职。
-# 请按照字母顺序进行添加，这样方便查找。
-SPP_USERS = (
-    "chenyang",
-    "chenzhongming",
-    "cuiqiang",
-    "dinghuihui",
-    "fengmingming",
-    "gaohongtao",
-    "kangxiaozheng",
-    "lilixiang",
-    "liuliang",
-    "liyingying",
-    "lizhutang",
-    "majinge",
-    "masol",
-    "wanglingzhao",
-    "wangxingzhuo",
-    "wangyansheng",
-    "wuyujie",
-    "xiejinrui",
-    "xuxinlong",
-    "yejunfu",
-    "yutian",
-    "zhanglinling",
-    "zhaojinpeng"
-)
-
 # only default value, you can pass this value from 
 # command line options per project.
 TRAC_DB_PATH = "/spp/data/stattrac/trac.db"

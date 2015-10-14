@@ -52,10 +52,6 @@ where strftime('%Y', time/1000000, 'unixepoch', 'localtime') = ? and strftime('%
     wiki = {}
     for name, version, author, text_len, text, year, month in month_wiki :
        
-        # 忽略一些用户，比如离职。
-        if author not in config.SPP_USERS:
-            continue
-       
         row = {}
         row["name"] = name
         row["version"] = version
