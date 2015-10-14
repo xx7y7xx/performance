@@ -102,21 +102,21 @@ def GetAllUsersInTrac(all_tickets) :
   Raises:
     ??
   """
-	users_list = []
-	for ticket_id, ticket in all_tickets.iteritems() :
-		# 忽略一些用户，比如离职。
-		if ticket["reporter"] not in users_list :
-			users_list.append(ticket["reporter"])
-		if ticket["owner"] not in users_list :
-			users_list.append(ticket["owner"])
-		
-		# 处理回帖的用户，因为有些用户可能只回帖不创建帖子。
-		for comment_id, comment in ticket["comment"].iteritems() :
-			# 忽略一些用户，比如离职。
-			if comment["author"] not in users_list :
-				users_list.append(comment["author"])
-	
-	return users_list
+  users_list = []
+  for ticket_id, ticket in all_tickets.iteritems() :
+    # 忽略一些用户，比如离职。
+    if ticket["reporter"] not in users_list :
+      users_list.append(ticket["reporter"])
+    if ticket["owner"] not in users_list :
+      users_list.append(ticket["owner"])
+    
+    # 处理回帖的用户，因为有些用户可能只回帖不创建帖子。
+    for comment_id, comment in ticket["comment"].iteritems() :
+      # 忽略一些用户，比如离职。
+      if comment["author"] not in users_list :
+        users_list.append(comment["author"])
+  
+  return users_list
 
 ##
 # @brief Get all tickets (w/o comment) in ONE month.
