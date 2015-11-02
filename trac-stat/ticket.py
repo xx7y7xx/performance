@@ -560,7 +560,7 @@ def TicketDealOneMonth(conn, year, month):
   
   index += "</table></td></tr></table>"
   
-    pathname = config.TRAC_OUTPUT_PATH + "/ticket" + "/" + year + month + ".html"
+  pathname = config.TRAC_OUTPUT_PATH + "/ticket" + "/" + year + month + ".html"
   f = open(pathname, 'w')
   f.write(header + index + output)
   f.close()
