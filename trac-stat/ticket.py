@@ -444,6 +444,7 @@ def TicketDealOneMonth(conn, year, month):
 		
 		# Show details ticket list, these tickets are created by myself, and for others.
 		# And the ticket type must be "task", means you are his leader.
+    sp_debug("Create table: 为别人创建任务贴")
 		output += "<h3><span id=\"" + user + "-create4others\">为别人创建任务贴</span></h3>\n"
 		output += "<table width='100%' border=1>\n<tr>\n<th width=\"5%\">Ticket</th><th>Summary</th><th width=\"5%\">Reporter</th><th width=\"5%\">Owner</th><th width=\"10%\">Description字数</th>\n</tr>\n"
 		wikitext += "=== 为别人创建任务贴 ===\n"
@@ -451,6 +452,8 @@ def TicketDealOneMonth(conn, year, month):
 			if ticket["reporter"] == user and ticket["owner"] != user :
 				if ticket["type"] != "task" :
 					continue
+        sp_debug(ticket["name"])
+        sp_debug(ticket["description"])
 				words_of_summary_and_description = xxutils.ticket_wc(ticket["name"] + config.EOL + ticket["description"])
 				output += "<tr onmouseover=\"this.className='highlight'\" onmouseout=\"this.className='normal'\">\n"
 				output += "<td>" + xxutils.createTicketLink(config.TRAC_URL, ticket_id, "#"+ticket_id) + "</td>\n"
