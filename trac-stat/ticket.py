@@ -460,8 +460,6 @@ def TicketDealOneMonth(conn, year, month):
       if ticket["reporter"] == user and ticket["owner"] != user :
         if ticket["type"] != "task" :
           continue
-        xxutils.sp_debug(ticket["name"])
-        xxutils.sp_debug(ticket["description"])
         words_of_summary_and_description = xxutils.ticket_wc(ticket["name"] + config.EOL + ticket["description"])
         output += "<tr onmouseover=\"this.className='highlight'\" onmouseout=\"this.className='normal'\">\n"
         output += "<td>" + xxutils.createTicketLink(config.TRAC_URL, ticket_id, "#"+ticket_id) + "</td>\n"
