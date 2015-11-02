@@ -265,7 +265,7 @@ ORDER BY
 	ticket_summary, ticket_description, ticket_datetime in all_comment:
 		# (85, u'chenyang', u'comment', u'11', u'\u53c2\u7167diff:default/trunk/thirdparty/libv8-convert-20110729@43:44', u'2011', u'11', 85, u'liwei', u'\u51c6\u5907windows\u5de5\u4f5c\u73af\u5883')
 		item = {}
-		item["ticket_id"] = str(ticket_change_ticket)
+		item["ticket_id"] = str(ticket_change_ticket or "")
 		item["type"] = ticket_type
 		item["component"] = ticket_component
 		item["create_time"] = ticket_time # 创建帖子的时间
@@ -273,8 +273,8 @@ ORDER BY
 		item["author"] = ticket_change_author
 		item["reporter"] = ticket_reporter
 		item["owner"] = ticket_owner
-		item["name"] = ticket_summary
-		item["description"] = ticket_description
+		item["name"] = str(ticket_summary or "")
+		item["description"] = str(ticket_description or "")
 		item["comment_content"] = ticket_change_newvalue
 		
 		# 回复某一楼的帖子的comment id有点奇怪，比如在4楼回复1楼的帖子，
