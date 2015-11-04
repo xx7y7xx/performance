@@ -186,7 +186,8 @@ def get_udata():
       print("'oa_group' property is missing in this node")
 
     #xxdebug
-    UDATA["gaohongtao"]["quality"] = 0.2
+    if name == "gaohongtao":
+      UDATA[name]["quality"] = 0.2
 
     print("[get_udata] %s : %i : %i" % ( name, UDATA[name]["creat"], UDATA[name]["quality"] ))
 
@@ -228,7 +229,11 @@ def single_odt(path, uname, create, table) :
         table.addElement(tr)
         # name column
         cell(tr, uname)
-        cell(tr, quality)
+        #xxdebug
+        if uname == "gaohongtao":
+          cell(tr, "0.5")
+        else:
+          cell(tr, quality)
     
     contrib = {
       "self_ticket": 0,   #0
@@ -478,7 +483,7 @@ if __name__ == '__main__':
 
   MONTH = ""
   TS = 0.0
-  XS = 0.0#xxdebug
+  XS = 0.0
   DEBUG = 0
   UDATA = {}
 
