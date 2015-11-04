@@ -104,7 +104,7 @@ if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
 
   foreach ( $data->rows as $key => $val )
   {
-    if ( $val->{"jcr:creat"} )
+    if ( isset($val->{"jcr:creat"}) && $val->{"jcr:creat"} )
     {
       $data->rows[$key]->{"jcr:creat"} = (string)(((int)$val->{"jcr:creat"}-20140000000)/99);
     }
