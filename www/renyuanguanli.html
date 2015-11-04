@@ -1,5 +1,21 @@
 <?php
 
+global $user;
+$pageuri = $_SERVER["REQUEST_URI"];
+$client_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+$ip_list = array(
+  "192.168.2.220",//chenyang
+  "192.168.2.21",//jenkins
+  "192.168.10.152"//wanghongliang
+);
+
+if ( ! in_array($client_ip, $ip_list) )
+{
+  xlog("$client_ip deny access $pageuri", "permission issue");
+  drupal_goto("404.html");
+}
+
 // basic page url usercenter/xingzheng/renyuanguanli.html
 
 if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
@@ -114,6 +130,29 @@ if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
 }
 else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
 {
+
+  // check login
+  if($user->uid == 0){
+    $options = array(
+      "query" => array(
+        "destination" => $pageuri
+    ));
+    drupal_goto("login.html", $options);
+  }
+
+  $user_list = array(
+    "chenyang@masols.com",
+    "wanghongliang@spolo.org",
+    "wanghongliang@wware.org"
+  );
+
+  $umail = $user->mail;
+  if ( ! in_array($umail, $user_list) )
+  {
+    xlog("$umail deny access $pageuri", "permission issue");
+    drupal_goto("404.html");
+  }
+
   drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
   switch($_POST["oper"])
   {
@@ -124,6 +163,7 @@ else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
       $telephone     = $_POST['telephone'];
       $oa_department = $_POST['oa_department'];
       $oa_group      = $_POST['oa_group'];
+      $oa_job        = $_POST['oa_job'];
       $oa_state      = $_POST['oa_state'];
       $jcr_creat     = $_POST['jcr:creat'];
       $jcr_creat     = (string)((int)$jcr_creat*99+20140000000);
@@ -135,6 +175,7 @@ else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
       $post_data .= "&telephone=$telephone";
       $post_data .= "&oa_department=$oa_department";
       $post_data .= "&oa_group=$oa_group";
+      $post_data .= "&oa_job=$oa_job";
       $post_data .= "&oa_state=$oa_state";
       $post_data .= "&jcr:creat=$jcr_creat";
       
@@ -163,9 +204,6 @@ else if ( isset($_POST["oper"]) && $_POST["oper"] != "" )
 }
 else
 {
-  global $user;
-  $pageuri = $_SERVER["REQUEST_URI"];
-
   // check login
   if($user->uid == 0){
     $options = array(
@@ -175,9 +213,14 @@ else
     drupal_goto("login.html", $options);
   }
 
-  $umail = $user->mail;
+  $user_list = array(
+    "chenyang@masols.com",
+    "wanghongliang@spolo.org",
+    "wanghongliang@wware.org"
+  );
 
-  if ( $umail != "chenyang@masols.com" )
+  $umail = $user->mail;
+  if ( ! in_array($umail, $user_list) )
   {
     xlog("$umail deny access $pageuri", "permission issue");
     drupal_goto("404.html");
@@ -214,6 +257,11 @@ else
 <body>
 <table id="list"></table>
 <div id="pager"></div>
+<pre style="display: none;">
+<?php
+//print_r($_SERVER);
+?>
+</pre>
 <script>
 
 var HTML_GENERATE_TIME = <?php echo time(); ?>;
@@ -252,9 +300,16 @@ var group_table = {
   "": "全部",
   "webfe": "web前端",
   "webbe": "web后端",
+  "gh3d": "飞鹿家居软件",
   "zhituyuan": "制图员",
   "art": "美术",
   "yanshou": "质检"
+};
+var job_table = {
+  "": "全部",
+  "chengxuyuan": "程序员",
+  "zuzhang": "组长",
+  "zhuguan": "主管"
 };
 
 $(function() {
@@ -299,6 +354,15 @@ $(function() {
         },
         stype: "select", searchoptions: {
           value: group_table
+        }
+      },
+      { label: "职位", name: "oa_job", index: "oa_job", width: 170,
+        formatter: yuangong_job,
+        editable: true, edittype: "select", editoptions: {
+          value: job_table
+        },
+        stype: "select", searchoptions: {
+          value: job_table
         }
       },
       { label: "状态", name: "oa_state", index: "oa_state", width: 170,
@@ -356,6 +420,11 @@ function yuangong_department ( cellvalue, options, rowObject )
 function yuangong_group ( cellvalue, options, rowObject )
 {
   return group_table[cellvalue] || cellvalue || "";
+}
+
+function yuangong_job ( cellvalue, options, rowObject )
+{
+  return job_table[cellvalue] || cellvalue || "";
 }
 
 </script>
