@@ -15,9 +15,6 @@ SVNPARAM=" --username=ci --password=sp12345678 --no-auth-cache "
 # Contains exclude cfg file for each repo.
 ExcludeDirsCfgDir="${WORKSPACE}/svn-stat/exclude_dirs"
 
-function getExcludeDirs() {
-}
-
 # one repo at a time
 #   $1 - modual name
 #   $2 - (Optional) path in this($1) modual.
