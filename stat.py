@@ -231,7 +231,7 @@ def single_odt(path, uname, create, table) :
         cell(tr, uname)
         #xxdebug
         if uname == "gaohongtao":
-          cell(tr, "0.5")
+          cell(tr, 0.5)
         else:
           cell(tr, quality)
     
