@@ -171,7 +171,7 @@ def get_udata():
       UDATA[name]["creat"] = (int(row["jcr:creat"])-20140000000)/99
     else:
       UDATA[name]["creat"] = 0
-      print("'jcr:creat' property is missing in this node")
+      print("[get_udata] ERROR: 'jcr:creat' property is missing in this node")
 
     code_quality_map = {
       "webfe" : 0.5,
@@ -184,6 +184,9 @@ def get_udata():
     else:
       UDATA[name]["quality"] = code_quality_map["webfe"]
       print("'oa_group' property is missing in this node")
+
+    #xxdebug
+    UDATA["gaohongtao"]["quality"] = 0.2
 
     print("[get_udata] %s : %i : %i" % ( name, UDATA[name]["creat"], UDATA[name]["quality"] ))
 
