@@ -6,45 +6,43 @@ function getHashValue(key) {
 
 var REPO_NAME = getHashValue('repo') || "glue";
 
-	var array =new Array();
-	var ValArray =new Array();
-	var InaArray =new Array();
-	require([
-			"dojo/ready",
-			"dojo/query",
-			"dojo/parser",
-			"dijit/layout/BorderContainer",
-			 "dijit/layout/ContentPane"
-		],function(ready, query,parser){			
-			ready(function(){
-				parser.parse();
-				divMenuItemClick();
-				
-				dojo.byId("myFrame").onload = function()
-				{
-					var frameDoc = dojo.byId("myFrame").contentWindow.document;	
-					if(frameDoc.title.toString() == "404 Not Found")
-					{
-						onerrorfunction();
-					}else
-					{	
-						dojo.withDoc(frameDoc, function()
-						{
-							var dt = dojo.query("dt");
-							var ddLog= dojo.query(".comment");							
-							var dd= dojo.query("dd");							
-							getDt(dt);
-							getDd(dd);
-						});
+var array =new Array();
+var ValArray =new Array();
+var InaArray =new Array();
 
-						array.sort(sortArray('author',false));
-						array =  clearArray(array);		
-						array = versionEm(array);												
-						listAuthors();					
-					}					
-			}
-			  });
-			  
+require([
+  "dojo/ready",
+  "dojo/query",
+  "dojo/parser",
+  "dijit/layout/BorderContainer",
+   "dijit/layout/ContentPane"
+], function(ready, query, parser) {
+
+  ready(function() {
+    parser.parse();
+    divMenuItemClick();
+
+    dojo.byId("myFrame").onload = function() {
+      var frameDoc = dojo.byId("myFrame").contentWindow.document;
+      if(frameDoc.title.toString() == "404 Not Found") {
+        onerrorfunction();
+      } else {
+        dojo.withDoc(frameDoc, function() {
+          var dt = dojo.query("dt");
+          var ddLog= dojo.query(".comment");
+          var dd= dojo.query("dd");
+          getDt(dt);
+          getDd(dd);
+        });
+  
+        array.sort(sortArray('author',false));
+        array =  clearArray(array);
+        array = versionEm(array);
+        listAuthors();
+      }
+    }
+  });
+
 		//write author name				
 			function listAuthors(){
 				var authorContainer = dojo.byId("divAuthors");
@@ -110,19 +108,26 @@ var REPO_NAME = getHashValue('repo') || "glue";
 						dojo.byId(array[index]["author"]).style.color = "#888";
 					}
 			}
-			
-			dojo.byId("count").innerHTML= countHtml ;
-			dojo.byId("divInvalidRevision").innerHTML="<hr/><div><p>无效提交:</p></div>"+invaliHtml;
-			dojo.byId("validRevision").innerHTML="<hr/><div><p>有效提交:</p></div> "+valiHtml;	
-			
-			var version = query(".revisionNumberInner");
-			dojo.forEach(version, function(cell){
-				var aHtml = "<a target=\"_blank\" href=\"http://glue.spolo.org/trac/glue/changeset/" +cell.innerHTML + "/glue\">";
-				aHtml +=cell.innerHTML;
-				aHtml += "<a/>";
-					cell.innerHTML = aHtml;
-			});
-			
+
+      dojo.byId("count").innerHTML= countHtml ;
+      dojo.byId("divInvalidRevision").innerHTML="<hr/><div><p>无效提交:</p></div>"+invaliHtml;
+      dojo.byId("validRevision").innerHTML="<hr/><div><p>有效提交:</p></div> "+valiHtml
+
+      // Replace rev to a link to glue trac.
+      dojo.forEach(query(".revisionNumberInner"), function(cell) {
+        var rev = cell.innerHTML;
+        cell.innerHTML = '<a target="_blank" href="http://glue.spolo.org/trac/glue/changeset/' + rev + '/glue">' + rev + '<a/>';
+      });
+
+      // Fix link in orignal statsvn html page.
+      dojo.forEach(query("a.author"), function(cell) {
+        cell.setAttribute("href", REPO_NAME + "/" + cell.getAttribute("href"));
+      });
+
+      // Current not support permalink (from statsvn generated web page).
+      dojo.forEach(query("a.permalink"), function(cell) {
+        cell.removeAttribute("href");
+      });
 		}
 			//get author and version
 		function getDt(node){
