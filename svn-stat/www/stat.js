@@ -1,4 +1,11 @@
 
+function getHashValue(key) {
+  var matches = location.hash.match(new RegExp(key+'=([^&]*)'));
+  return matches ? matches[1] : null;
+}
+
+var REPO_NAME = getHashValue('repo') || "glue";
+
 	var array =new Array();
 	var ValArray =new Array();
 	var InaArray =new Array();
@@ -234,11 +241,11 @@
             
       if ( curr_month == month )
       {
-        iframe.src = "./glue/commitlog.html";
+        iframe.src = "./" + REPO_NAME + "/commitlog.html";
       }
       else
       {
-        iframe.src = "./glue/" + date + ".html";
+        iframe.src = "./" + REPO_NAME + "/" + date + ".html";
       }
 		}		
 		
