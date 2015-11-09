@@ -168,8 +168,8 @@ def get_udata():
     print("userID=%s" % name)
 
     # Not input user's pay
-    if int(row["jcr:creat"]) == -1:
-      print("[get_udata] ERROR: 'jcr:creat' is -1, not input user's pay!!!")
+    if int(row["jcr:creat"]) == 1:
+      print("[get_udata] ERROR: 'jcr:creat' is 1, not input user's pay!!!")
     UDATA[name]["creat"] = int(row["jcr:creat"])
 
     code_quality_map = {
@@ -344,7 +344,7 @@ def single_odt(path, uname, create, table) :
             cell(tr, (creat / XS))          # creat score
         cell(tr, score)
 
-        if creat == -1:
+        if creat == 1:
           cell(tr, "ERROR")
 
 def get_file_path(name):

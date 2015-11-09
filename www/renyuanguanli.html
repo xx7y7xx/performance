@@ -103,10 +103,10 @@ if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
 */
 
   foreach ($data->rows as $key => $val) {
-    if (isset($val->{"jcr:creat"}) && $val->{"jcr:creat"}) {
+    if (isset($val->{"jcr:creat"})) {
       $data->rows[$key]->{"jcr:creat"} = ((int)$val->{"jcr:creat"}-20140000000)/99;
     } else {
-      $data->rows[$key]->{"jcr:creat"} = -1;
+      $data->rows[$key]->{"jcr:creat"} = 1;
     }
   }
 
