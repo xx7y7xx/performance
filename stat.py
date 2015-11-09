@@ -181,12 +181,8 @@ def get_udata():
     if "oa_group" in row:
       UDATA[name]["quality"] = code_quality_map[row["oa_group"]]
     else:
-      UDATA[name]["quality"] = code_quality_map["webfe"]
-      print("'oa_group' property is missing in this node")
-
-    #xxdebug
-    if name == "gaohongtao":
-      UDATA[name]["quality"] = 0.2
+      UDATA[name]["quality"] = 9999
+      print("ERROR 'oa_group' property is missing in this node")
 
     print("[get_udata] %s : %i : %i" % ( name, UDATA[name]["creat"], UDATA[name]["quality"] ))
 
@@ -228,11 +224,7 @@ def single_odt(path, uname, create, table) :
         table.addElement(tr)
         # name column
         cell(tr, uname)
-        #xxdebug
-        if uname == "gaohongtao":
-          cell(tr, 0.5)
-        else:
-          cell(tr, quality)
+        cell(tr, quality)
     
     contrib = {
       "self_ticket": 0,   #0
@@ -346,6 +338,8 @@ def single_odt(path, uname, create, table) :
 
         if creat == 1:
           cell(tr, "错误：薪资为0！")
+        if quality == 9999:
+          cell(tr, "错误：没有分小组！")
 
 def get_file_path(name):
     global REVIEW
