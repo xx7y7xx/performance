@@ -345,7 +345,7 @@ def single_odt(path, uname, create, table) :
         cell(tr, score)
 
         if creat == 1:
-          cell(tr, "ERROR")
+          cell(tr, "错误：薪资为0！")
 
 def get_file_path(name):
     global REVIEW
