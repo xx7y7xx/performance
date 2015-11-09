@@ -102,15 +102,11 @@ if ( isset($_GET["xpath"]) && $_GET["xpath"] != "" )
   }
 */
 
-  foreach ( $data->rows as $key => $val )
-  {
-    if ( isset($val->{"jcr:creat"}) && $val->{"jcr:creat"} )
-    {
-      $data->rows[$key]->{"jcr:creat"} = (string)(((int)$val->{"jcr:creat"}-20140000000)/99);
-    }
-    else
-    {
-      $data->rows[$key]->{"jcr:creat"} = 0;
+  foreach ($data->rows as $key => $val) {
+    if (isset($val->{"jcr:creat"}) && $val->{"jcr:creat"}) {
+      $data->rows[$key]->{"jcr:creat"} = ((int)$val->{"jcr:creat"}-20140000000)/99;
+    } else {
+      $data->rows[$key]->{"jcr:creat"} = -1;
     }
   }
 

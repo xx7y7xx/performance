@@ -167,11 +167,10 @@ def get_udata():
 
     print("userID=%s" % name)
 
-    if "jcr:creat" in row:
-      UDATA[name]["creat"] = (int(row["jcr:creat"])-20140000000)/99
-    else:
-      UDATA[name]["creat"] = 0
-      print("[get_udata] ERROR: 'jcr:creat' property is missing in this node")
+    # Not input user's pay
+    if int(row["jcr:creat"]) == -1:
+      print("[get_udata] ERROR: 'jcr:creat' is -1, not input user's pay!!!")
+    UDATA[name]["creat"] = int(row["jcr:creat"])
 
     code_quality_map = {
       "webfe" : 0.5,
@@ -344,6 +343,9 @@ def single_odt(path, uname, create, table) :
             cell(tr, creat)                 # creat
             cell(tr, (creat / XS))          # creat score
         cell(tr, score)
+
+        if creat == -1:
+          cell(tr, "ERROR")
 
 def get_file_path(name):
     global REVIEW
