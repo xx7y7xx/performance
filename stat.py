@@ -234,14 +234,15 @@ def single_odt(path, uname, create, table) :
       "daima": 0,         #4
       "bug": 0,           #5
       "xuqiu": 0,         #6
-      "zuyuan": 0         #7
+      "zuyuan": 0,        #7
+      "wendang": 0        #8
     }
 
     # Loop every line in odt.
     idx = 0
     for para in doc.getElementsByType(text.P):
         
-        if idx >= 8 :
+        if idx >= 9 :
             break
         
         # no child
@@ -274,6 +275,8 @@ def single_odt(path, uname, create, table) :
           contrib["xuqiu"] = num
         if idx == 7:
           contrib["zuyuan"] = num
+        if idx == 8:
+          contrib["wendang"] = num
         
         idx += 1
 
@@ -298,6 +301,8 @@ def single_odt(path, uname, create, table) :
           cell(tr, contrib["xuqiu"] * is_3m)
         if idx == 7:
           cell(tr, contrib["zuyuan"])
+        if idx == 8:
+          cell(tr, contrib["wendang"])
     
     # every single contrib
     self_ticket = contrib["self_ticket"]
@@ -308,10 +313,11 @@ def single_odt(path, uname, create, table) :
     bug = contrib["bug"]
     xuqiu = contrib["xuqiu"]
     zuyuan = contrib["zuyuan"]
+    wendang = contrib["wendang"]
     
-    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)
-    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ)"
-    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"*"+str(TMQ)
+    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ + wendang/10)
+    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ + wendang/10)"
+    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"*"+str(TMQ)+"+"+str(wendang)+"/10"
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
@@ -388,6 +394,7 @@ def header(table) :
     cell(tr, "bug贴", tableheader)
     cell(tr, "3月加成", tableheader)
     cell(tr, "组员贡献", tableheader)
+    cell(tr, "文档", tableheader)
     
     cell(tr, "绝对贡献", tableheader)
     cell(tr, "贡献占比", tableheader)
