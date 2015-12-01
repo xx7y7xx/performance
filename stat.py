@@ -173,7 +173,7 @@ def get_udata():
     UDATA[name]["creat"] = int(row["jcr:creat"])
 
     code_quality_map = {
-      "webfe" : 0.5,
+      "webfe" : 1,
       "webbe" : 1,
       "gh3d"  : 1
     }
