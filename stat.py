@@ -199,6 +199,65 @@ def cell(tr, val, style = None) :
     p = P(stylename=tablecontents,text=str(val))
     tc.addElement(p)
 
+# Get single stuff contribution
+def get_single_contrib(ods_path):
+  doc = load(ods_path)
+  contrib = {
+    "self_ticket": 0,   #0
+    "other_ticket": 0,  #1
+    "wiki": 0,          #2
+    "wiki_code": 0,     #3
+    "daima": 0,         #4
+    "bug": 0,           #5
+    "xuqiu": 0,         #6
+    "zuyuan": 0,        #7
+    "wendang": 0        #8
+  }
+
+  # Loop every line in odt.
+  idx = 0
+  for para in doc.getElementsByType(text.P):
+      
+    if idx >= 9 :
+        break
+    
+    # no child
+    if not para.hasChildNodes() :
+        continue
+    
+    num = get_num(para)
+    print "[single_odt] idx='%s'" % str(idx)
+    print "[single_odt] num='%s'" % str(num)
+
+    if idx == 0:
+      contrib["self_ticket"] = num
+    if idx == 1:
+      contrib["other_ticket"] = num
+    if idx == 2:
+      contrib["wiki"] = num
+    if idx == 3:
+      contrib["wiki_code"] = num
+    if idx == 4:
+      contrib["daima"] = num
+    if idx == 5:
+      print "[single_odt] bug column"
+      # bug number not large than 100
+      #assert num < 100
+      if num >= 100:
+        print "[single_odt] bug number large than 100"
+        num = 0.0
+      contrib["bug"] = num
+    if idx == 6:
+      contrib["xuqiu"] = num
+    if idx == 7:
+      contrib["zuyuan"] = num
+    if idx == 8:
+      contrib["wendang"] = num
+    
+    idx += 1
+
+  return contrib
+
 def single_odt(path, uname, create, table) :
     global TS
     global XS
@@ -214,96 +273,10 @@ def single_odt(path, uname, create, table) :
     quality = UDATA[uname]['quality']
     print "[single_odt] quality of " + uname + " is " + str(quality)
     print "[single_odt] 3m of " + uname + " is " + str(is_3m)
-
     print "[single_odt] path="+path
-    doc = load(path)
     
-    if create == 1 :
-        # new row
-        tr = TableRow()
-        table.addElement(tr)
-        # name column
-        cell(tr, uname)
-        cell(tr, quality)
-    
-    contrib = {
-      "self_ticket": 0,   #0
-      "other_ticket": 0,  #1
-      "wiki": 0,          #2
-      "wiki_code": 0,     #3
-      "daima": 0,         #4
-      "bug": 0,           #5
-      "xuqiu": 0,         #6
-      "zuyuan": 0,        #7
-      "wendang": 0        #8
-    }
+    contrib = get_single_contrib(path)
 
-    # Loop every line in odt.
-    idx = 0
-    for para in doc.getElementsByType(text.P):
-        
-        if idx >= 9 :
-            break
-        
-        # no child
-        if not para.hasChildNodes() :
-            continue
-        
-        num = get_num(para)
-        print "[single_odt] idx='%s'" % str(idx)
-        print "[single_odt] num='%s'" % str(num)
-
-        if idx == 0:
-          contrib["self_ticket"] = num
-        if idx == 1:
-          contrib["other_ticket"] = num
-        if idx == 2:
-          contrib["wiki"] = num
-        if idx == 3:
-          contrib["wiki_code"] = num
-        if idx == 4:
-          contrib["daima"] = num
-        if idx == 5:
-          print "[single_odt] bug column"
-          # bug number not large than 100
-          #assert num < 100
-          if num >= 100:
-            print "[single_odt] bug number large than 100"
-            num = 0.0
-          contrib["bug"] = num
-        if idx == 6:
-          contrib["xuqiu"] = num
-        if idx == 7:
-          contrib["zuyuan"] = num
-        if idx == 8:
-          contrib["wendang"] = num
-        
-        idx += 1
-
-    # Write number to table cell
-    #@FIXME cell function should accept column number param
-    if create == 1:
-      for idx in range(8):
-        if idx == 0:
-          cell(tr, contrib["self_ticket"])
-        if idx == 1:
-          cell(tr, contrib["other_ticket"])
-        if idx == 2:
-          cell(tr, contrib["wiki"])
-        if idx == 3:
-          cell(tr, contrib["wiki_code"])
-        if idx == 4:
-          cell(tr, contrib["daima"])
-        if idx == 5:
-          cell(tr, contrib["bug"])
-        # is 3month
-        if idx == 6:
-          cell(tr, contrib["xuqiu"] * is_3m)
-        if idx == 7:
-          cell(tr, contrib["zuyuan"])
-        if idx == 8:
-          cell(tr, contrib["wendang"])
-    
     # every single contrib
     self_ticket = contrib["self_ticket"]
     other_ticket = contrib["other_ticket"]
@@ -324,28 +297,48 @@ def single_odt(path, uname, create, table) :
         TS += all_as_code
     
     if create == 1 :
-        if DEBUG is 1 :
-            print "creat="+str(creat)
-            print "XS(total creat)="+str(XS)
-        print "TS="+str(TS)
+      if DEBUG is 1 :
+        print "creat="+str(creat)
+        print "XS(total creat)="+str(XS)
+      print "TS="+str(TS)
 
-        assert TS != 0
-        assert XS != 0
+      assert TS != 0
+      assert XS != 0
 
-        print "score = (%s/%s)/(%s/%s)" % (str(all_as_code), str(TS), str(creat), str(XS))
-        score = (all_as_code / TS) / (creat / XS)
+      print "score = (%s/%s)/(%s/%s)" % (str(all_as_code), str(TS), str(creat), str(XS))
+      score = (all_as_code / TS) / (creat / XS)
 
-        cell(tr, all_as_code)               # all as score
-        cell(tr, (all_as_code / TS))        # code score
-        if DEBUG != 0 :
-            cell(tr, creat)                 # creat
-            cell(tr, (creat / XS))          # creat score
-        cell(tr, score)
+      # new row
+      tr = TableRow()
+      table.addElement(tr)
+      # name column
+      cell(tr, uname)
+      cell(tr, quality)
 
-        if creat == 1:
-          cell(tr, "错误：薪资为0！")
-        if quality == 9999:
-          cell(tr, "错误：没有分小组！")
+      # Write number to table cell
+      #@FIXME cell function should accept column number param
+      cell(tr, contrib["self_ticket"])
+      cell(tr, contrib["other_ticket"])
+      cell(tr, contrib["wiki"])
+      cell(tr, contrib["wiki_code"])
+      cell(tr, contrib["daima"])
+      cell(tr, contrib["bug"])
+      # is 3month
+      cell(tr, contrib["xuqiu"] * is_3m)
+      cell(tr, contrib["zuyuan"])
+      cell(tr, contrib["wendang"])
+
+      cell(tr, all_as_code)               # all as score
+      cell(tr, (all_as_code / TS))        # code score
+      if DEBUG != 0 :
+        cell(tr, creat)                 # creat
+        cell(tr, (creat / XS))          # creat score
+      cell(tr, score)
+
+      if creat == 1:
+        cell(tr, "错误：薪资为0！")
+      if quality == 9999:
+        cell(tr, "错误：没有分小组！")
 
 def get_file_path(name):
     global REVIEW
