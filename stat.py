@@ -55,9 +55,21 @@ def valuetype(val):
 
 def get_num(para) :
     num = ""
+
+    # Loop <p> node
+    # Example:
+    # <p class="P1" style="margin-left:0cm;">
+    #   <span class="Bullet_20_Symbols" style="display:block;float:left;min-width:0.635cm;">•</span>
+    #   <span class="T7">7</span>
+    #   所有组员的平均代码行数：
+    #   <span class="T5">[0]</span>
+    #   <span class="odfLiEnd">&nbsp;</span>
+    # </p>
     for child in para.childNodes :
-        #pt=Para Text
-        #<p>$text<p>
+        # <p>
+        #   <span>$text</span>
+        #   $text <-- child node (type: Para Text)
+        # <p>
         if child.nodeType is child.TEXT_NODE :
             pt = child.data
             pt = pt.encode("utf8")
@@ -66,12 +78,11 @@ def get_num(para) :
             pt = filter(str.isdigit, pt)
             if pt != "" :
                 num += pt
-        #pst=Para Span Text
-        #<p>
-        #  <span>$text</span>
-        #  <span>$text</span>
-        #</p>
-        if child.nodeType is child.ELEMENT_NODE : 
+        # <p>
+        #   <span>$text</span> <-- child node (type: Para Span Text)
+        #   $text
+        # </p>
+        elif child.nodeType is child.ELEMENT_NODE : 
             for chd in child.childNodes :
                 if chd.nodeType is chd.TEXT_NODE :
                     pst = chd.data
@@ -215,12 +226,29 @@ def get_single_contrib(ods_path):
     "yemianshuliang": 0   #9
   }
 
+  # Javascript: document.getElementsByTagName("p")
+  # Python: doc.getElementsByType(text.P)
+
   # Loop every line in odt.
+  # Debug method:
+  # 1. Use libreoffice to open a odt file
+  # 2. Export to exported.html
+  # 3. Open exported.html with chrome
+  # 4. Use F12 to inspect the DOM
+  # Another debug method:
+  # 1. http://www.webodf.org/demo/ci/wodotexteditor-0.5.9/localeditor.html
+  # 2. Open your odt file
+  # 3. Use F12 to inspect the DOM
   idx = 0
-  for para in doc.getElementsByType(text.P):
-      
-    if idx >= 9 :
-        break
+  p_tag_list = doc.getElementsByType(text.P)
+  print("[single_odt] found %s <p> tag" % len(p_tag_list))
+  for para in p_tag_list:
+    
+    # `para` is a <p> node
+
+    if idx >= 10 :
+      print("[single_odt] ignore this <p> tag")
+      break
     
     # no child
     if not para.hasChildNodes() :
