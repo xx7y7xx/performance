@@ -397,6 +397,7 @@ def header(table) :
     cell(tr, "3月加成", tableheader)
     cell(tr, "组员贡献", tableheader)
     cell(tr, "文档", tableheader)
+    cell(tr, "动态化的页面数", tableheader)
     
     cell(tr, "绝对贡献", tableheader)
     cell(tr, "贡献占比", tableheader)
