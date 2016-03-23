@@ -211,7 +211,7 @@ def get_single_contrib(ods_path):
     "bug": 0,             #5
     "xuqiu": 0,           #6
     "zuyuan": 0,          #7
-    "wendang": 0          #8
+    "wendang": 0,         #8
     "yemianshuliang": 0   #9
   }
 
