@@ -203,15 +203,16 @@ def cell(tr, val, style = None) :
 def get_single_contrib(ods_path):
   doc = load(ods_path)
   contrib = {
-    "self_ticket": 0,   #0
-    "other_ticket": 0,  #1
-    "wiki": 0,          #2
-    "wiki_code": 0,     #3
-    "daima": 0,         #4
-    "bug": 0,           #5
-    "xuqiu": 0,         #6
-    "zuyuan": 0,        #7
-    "wendang": 0        #8
+    "self_ticket": 0,     #0
+    "other_ticket": 0,    #1
+    "wiki": 0,            #2
+    "wiki_code": 0,       #3
+    "daima": 0,           #4
+    "bug": 0,             #5
+    "xuqiu": 0,           #6
+    "zuyuan": 0,          #7
+    "wendang": 0          #8
+    "yemianshuliang": 0   #9
   }
 
   # Loop every line in odt.
@@ -253,6 +254,8 @@ def get_single_contrib(ods_path):
       contrib["zuyuan"] = num
     if idx == 8:
       contrib["wendang"] = num
+    if idx == 9:
+      contrib["yemianshuliang"] = num
     
     idx += 1
 
@@ -287,10 +290,15 @@ def single_odt(path, uname, create, table) :
     xuqiu = contrib["xuqiu"]
     zuyuan = contrib["zuyuan"]
     wendang = contrib["wendang"]
+    yemianshuliang = contrib["yemianshuliang"]
     
-    all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ + wendang/10)
-    print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ + wendang/10)"
-    print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"*"+str(TMQ)+"+"+str(wendang)+"/10"
+    # old style
+    #all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ + wendang/10)
+    # new style
+    all_as_code = float(wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + yemianshuliang)
+
+    #print "all_as_code = float(daima*quality + xuqiu*10*is_3m*quality + bug*20 + wiki_code/100 + wiki/20 + self_ticket/50 + other_ticket/40 + zuyuan*TMQ + wendang/10)"
+    #print str(daima)+"*"+str(quality)+"+"+str(xuqiu)+"*10*"+str(is_3m)+"*"+str(quality)+"+"+str(bug)+"*20"+"+"+str(wiki_code)+"/100"+"+"+str(wiki)+"/20"+"+"+str(self_ticket)+"/50"+"+"+str(other_ticket)+"/40"+"+"+str(zuyuan)+"*"+str(TMQ)+"+"+str(wendang)+"/10"
     print "all_as_code="+str(all_as_code)
     
     if create == 0 :
@@ -327,6 +335,7 @@ def single_odt(path, uname, create, table) :
       cell(tr, contrib["xuqiu"] * is_3m)
       cell(tr, contrib["zuyuan"])
       cell(tr, contrib["wendang"])
+      cell(tr, contrib["yemianshuliang"])
 
       cell(tr, all_as_code)               # all as score
       cell(tr, (all_as_code / TS))        # code score
