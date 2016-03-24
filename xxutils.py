@@ -75,16 +75,23 @@ def get_user_list_from_trac() :
     # get real developer
     ret = []
     for line in raw_data.splitlines():
-        # find all developer from email address.
-        m = re.search(r"(\w+)@spolo.org", line)
-        if m:
-            name = m.group(1)
+      # find all developer from email address.
+      # ^.*chenyang@spolo.org.*$
+      m = re.search(r"(\w+)@spolo.org", line)
 
-            # not developer.
-            if name in ["liwei", "hanlu", "changyushan", "peizhelun", "tangying"]:
-                continue
+      # ^|| chenyang || ... $
+      #m = re.search(r"^|| (\w+) ||", line)
 
-            ret.append(name)
+      if not m:
+        continue
+
+      name = m.group(1)
+
+      # not developer.
+      if name in ["liwei", "hanlu", "changyushan", "peizhelun", "tangying"]:
+        continue
+
+      ret.append(name)
 
     return ret
 
