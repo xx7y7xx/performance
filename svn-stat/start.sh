@@ -41,6 +41,7 @@ stat_repo() {
 
   # Do a fresh checkout or update exist one.
   if [ -d $sr_svn_dir/.svn ]; then
+    svn cleanup $sr_svn_dir
     svn update $SVNPARAM $sr_svn_dir
   else
     svn checkout $SVNPARAM $sr_svn_url $sr_svn_dir
